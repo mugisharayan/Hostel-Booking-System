@@ -1,44 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
+import './SignUp.css';
 
 function SignUp() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: ''
-  });
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    console.log('Form submitted');
   };
 
   return (
-    <div>
+    <div className="signup-container">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label>Name:</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+          <input type="text" name="name" required />
         </div>
         
-        <div>
+        <div className="form-group">
           <label>Email:</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          <input type="email" name="email" required />
         </div>
         
-        <div>
+        <div className="form-group">
           <label>Phone:</label>
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+          <input type="tel" name="phone" required />
         </div>
         
-        <button type="submit">Sign Up</button>
+        <button type="submit" className="submit-btn">Sign Up</button>
       </form>
     </div>
   );
