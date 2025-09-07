@@ -1,0 +1,162 @@
+.payment-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  font-family: Arial, sans-serif;
+}
+
+.payment-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 32px;
+}
+
+.payment-section {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 18px 16px;
+  margin-bottom: 20px;
+  background: #fafafa;
+}
+
+.payment-section h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.payment-footer {
+  text-align: center;
+  margin-top: 28px;
+}
+
+.payment-btn {
+  background: #0094ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.payment-btn:hover {
+  background: #0077cc;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 18px;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.student-input {
+  width: 100%;
+  background: #3a3a3a;
+  color: #d3d3d3;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 14px;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+
+.student-input:focus {
+  box-shadow: 0 0 0 2px #0094ff44;
+  color: #fff;
+}
+
+.booking-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 18px;
+  gap: 24px;
+}
+
+.booking-label {
+  color: #4a5a6a;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.booking-value {
+  color: #22303a;
+  font-size: 1.18rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.booking-price {
+  font-weight: 700;
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  background: #f1f6fe;
+  border: 2px solid #388bff;
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 1.18rem;
+  font-weight: 500;
+  color: #2563eb;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+.payment-radio {
+  accent-color: #2563eb;
+  width: 26px;
+  height: 26px;
+  margin-right: 18px;
+}
+
+.payment-method-label {
+  color: #2563eb;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .payment-container {
+    padding: 16px 4px;
+    max-width: 98vw;
+  }
+}
