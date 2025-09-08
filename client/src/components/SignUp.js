@@ -13,7 +13,7 @@ function SignUp() {
     };
 
     try {
-      const response = await fetch('/api/students/signup', {
+      const response = await fetch('http://localhost:5001/api/students/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,14 +23,12 @@ function SignUp() {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Signup successful:', result);
         alert('Signup successful!');
+        e.target.reset();
       } else {
-        console.error('Signup failed');
         alert('Signup failed. Please try again.');
       }
     } catch (error) {
-      console.error('Error:', error);
       alert('Error occurred. Please try again.');
     }
   };
