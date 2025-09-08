@@ -2,9 +2,37 @@ import React from 'react';
 import './SignUp.css';
 
 function SignUp() {
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted');
+    
+    const formData = new FormData(e.target);
+    const studentData = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      phone: formData.get('phone')
+    };
+
+    try {
+      const response = await fetch('/api/students/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(studentData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Signup successful:', result);
+        alert('Signup successful!');
+      } else {
+        console.error('Signup failed');
+        alert('Signup failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error occurred. Please try again.');
+    }
   };
 
   return (
