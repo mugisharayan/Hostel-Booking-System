@@ -9,26 +9,10 @@ const Home = () => {
       id: 1,
       name: 'Sunshine Hostel',
       imageUrl: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400',
-      costPerNight: 25,
+      costPerSemester: 800000,
       gender: 'Mixed',
       rating: { average: 4.5, reviews: 120 }
     },
-    {
-      id: 2,
-      name: 'University Hall',
-      imageUrl: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400',
-      costPerNight: 30,
-      gender: 'Female',
-      rating: { average: 4.8, reviews: 95 }
-    },
-    {
-      id: 3,
-      name: 'Campus Lodge',
-      imageUrl: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
-      costPerNight: 20,
-      gender: 'Male',
-      rating: { average: 4.2, reviews: 78 }
-    }
   ];
 
   return (
@@ -53,7 +37,7 @@ const Home = () => {
               />
               <div className="hostel-info">
                 <h2 className="hostel-name">{hostel.name}</h2>
-                <p className="hostel-cost">${hostel.costPerNight} / night</p>
+                <p className="hostel-cost">UGX {hostel.costPerSemester.toLocaleString()} / semester</p>
                 <div className="hostel-meta">
                   <span className="hostel-gender">{hostel.gender}</span>
                   {hostel.rating && (

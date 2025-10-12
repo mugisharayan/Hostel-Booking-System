@@ -1,52 +1,71 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './HostelDetails.css';
 
 const HostelDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Sample hostel data - in a real app, this would be fetched from backend
+  // Real data to be fetched from backend
   const hostelsData = {
     1: {
       id: 1,
       name: 'Sunshine Hostel',
       imageUrl: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800',
-      costPerNight: 25,
+      costPerSemester: 800000,
       gender: 'Mixed',
       rating: { average: 4.5, reviews: 120 },
       description: 'A bright and welcoming hostel located near campus. Features include free WiFi, study rooms, and a communal kitchen.',
       amenities: ['Free WiFi', 'Study Room', 'Kitchen', 'Laundry', '24/7 Security'],
-      address: '123 University Ave, Campus District',
-      availableRooms: 5
+      address: '123 University Ave, Makerere',
+      availableRooms: 5,
+      coordinates: { lat: 0.3301, lng: 32.5713 } // Makerere University area
     },
     2: {
       id: 2,
       name: 'University Hall',
       imageUrl: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
-      costPerNight: 30,
+      costPerSemester: 1200000,
       gender: 'Female',
       rating: { average: 4.8, reviews: 95 },
       description: 'Modern female-only accommodation with excellent facilities and a supportive community atmosphere.',
       amenities: ['Free WiFi', 'Gym', 'Study Room', 'Kitchen', 'Recreation Room'],
-      address: '456 College Road, Student Quarter',
-      availableRooms: 3
+      address: '456 Wandegeya, Kampala',
+      availableRooms: 3,
+      coordinates: { lat: 0.3376, lng: 32.5731 } // Wandegeya area
     },
     3: {
       id: 3,
       name: 'Campus Lodge',
       imageUrl: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
-      costPerNight: 20,
+      costPerSemester: 650000,
       gender: 'Male',
       rating: { average: 4.2, reviews: 78 },
       description: 'Affordable male accommodation within walking distance of campus. Perfect for students on a budget.',
       amenities: ['Free WiFi', 'Kitchen', 'Study Area', 'Parking'],
-      address: '789 Student Street, Campus Area',
-      availableRooms: 8
+      address: '789 Kikoni, Kampala',
+      availableRooms: 8,
+      coordinates: { lat: 0.3352, lng: 32.5642 } // Kikoni area
     }
   };
 
   const hostel = hostelsData[id];
+
+  // Google Maps configuration
+  const mapContainerStyle = {
+    width: '100%',
+    height: '400px',
+    borderRadius: '8px'
+  };
+
+  const mapOptions = {
+    disableDefaultUI: false,
+    zoomControl: true,
+    streetViewControl: false,
+    mapTypeControl: false,
+    fullscreenControl: true,
+  };
 
   if (!hostel) {
     return (
@@ -102,10 +121,29 @@ const HostelDetails = () => {
             </ul>
           </div>
 
+          <div className="details-section">
+            <h3>Map Location</h3>
+            <div className="map-container">
+              <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}>
+                <GoogleMap
+                  mapContainerStyle={mapContainerStyle}
+                  center={hostel.coordinates}
+                  zoom={15}
+                  options={mapOptions}
+                >
+                  <Marker
+                    position={hostel.coordinates}
+                    title={hostel.name}
+                  />
+                </GoogleMap>
+              </LoadScript>
+            </div>
+          </div>
+
           <div className="details-booking">
             <div className="booking-info">
-              <p className="price-label">Price per night</p>
-              <p className="price-value">${hostel.costPerNight}</p>
+              <p className="price-label">Price per semester</p>
+              <p className="price-value">UGX {hostel.costPerSemester.toLocaleString()}</p>
               <p className="rooms-available">
                 {hostel.availableRooms} rooms available
               </p>
