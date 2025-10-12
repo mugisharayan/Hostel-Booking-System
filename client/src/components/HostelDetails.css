@@ -1,0 +1,199 @@
+.details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+
+.back-button:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.details-content {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details-image-section {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.details-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.details-info {
+  padding: 30px;
+}
+
+.details-title {
+  font-size: 2.5rem;
+  color: #333;
+  margin: 0 0 15px 0;
+}
+
+.details-meta {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.details-rating {
+  color: #fbbf24;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.details-gender {
+  background: #f3f4f6;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #666;
+}
+
+.details-description {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.details-section {
+  margin-bottom: 30px;
+}
+
+.details-section h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.details-section p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.amenities-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.amenities-list li {
+  font-size: 1rem;
+  color: #555;
+  padding: 8px 0;
+}
+
+.map-container {
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.details-booking {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 30px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.booking-info {
+  flex: 1;
+}
+
+.price-label {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.price-value {
+  font-size: 2rem;
+  color: #2563eb;
+  font-weight: 700;
+  margin: 5px 0;
+}
+
+.rooms-available {
+  font-size: 0.9rem;
+  color: #16a34a;
+  margin: 5px 0 0 0;
+}
+
+.book-button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+}
+
+.book-button:hover {
+  background: #1d4ed8;
+}
+
+.not-found {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.not-found h2 {
+  font-size: 2rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .details-title {
+    font-size: 2rem;
+  }
+
+  .details-image-section {
+    height: 250px;
+  }
+
+  .details-info {
+    padding: 20px;
+  }
+
+  .details-booking {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .book-button {
+    width: 100%;
+  }
+}

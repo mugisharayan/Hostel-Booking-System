@@ -1,44 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import SignUp from './components/SignUp';
+import Home from './components/Home';
+import HostelDetails from './components/HostelDetails';
 import StudentPayment from './components/StudentPayment';
 
 function App() {
-  const [showSignUp, setShowSignUp] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-
-  if (showSignUp) {
-    return (
-      <div className="App">
-        <SignUp />
-      </div>
-    );
-  }
-
-  if (showPayment) {
-    return (
-      <div className="App">
-        <StudentPayment />
-      </div>
-    );
-  }
-
-  if (showLogin) {
-    return (
-      <div className="App">
-       
-      </div>
-    );
-  }
-
   return (
-    <div className="App">
-      <h1>Hello Worldz</h1>
-      <button onClick={() => setShowSignUp(true)}>Sign Up</button>
-      <button onClick={() => setShowPayment(true)} style={{ marginLeft: '10px' }}>Student Payment</button>
-      <button onClick={() => setShowLogin(true)} style={{ marginLeft: '10px' }}></button>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/hostel/:id" element={<HostelDetails />} />
+          <Route path="/payment" element={<StudentPayment />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
