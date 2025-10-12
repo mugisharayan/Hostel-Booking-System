@@ -1,0 +1,239 @@
+.payment-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(16, 16, 16, 0.08);
+  font-family: Arial, sans-serif;
+}
+
+.payment-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 32px;
+}
+
+.payment-section {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 18px 16px;
+  margin-bottom: 20px;
+  background: #fafafa;
+}
+
+.payment-section h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.payment-footer {
+  text-align: center;
+  margin-top: 28px;
+}
+
+.payment-btn {
+  background: #0094ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.payment-btn:hover {
+  background: #0077cc;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 18px;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.student-input {
+  width: 100%;
+  background: #3a3a3a;
+  color: #d3d3d3;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 14px;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+
+.student-input:focus {
+  box-shadow: 0 0 0 2px #0094ff44;
+  color: #fff;
+}
+
+.booking-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 18px;
+  gap: 24px;
+}
+
+.booking-label {
+  color: #4a5a6a;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.booking-value {
+  color: #22303a;
+  font-size: 1.18rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.booking-price {
+  font-weight: 700;
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  background: #f1f6fe;
+  border: 2px solid #388bff;
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 1.18rem;
+  font-weight: 500;
+  color: #2563eb;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+.payment-radio {
+  accent-color: #2563eb;
+  width: 26px;
+  height: 26px;
+  margin-right: 18px;
+}
+
+.payment-method-label {
+  color: #2563eb;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.payment-method-section {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px 0 rgba(30,41,59,.06);
+  padding: 28px 32px 32px 32px;
+  margin-top: 32px;
+}
+
+.payment-method-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payment-method-icon {
+  font-size: 1.6rem;
+  color: #2563eb;
+}
+
+.payment-method-subtitle {
+  color: #475569;
+  font-size: 1.08rem;
+  margin: 10px 0 24px 2px;
+}
+
+.payment-method-options {
+  display: flex;
+  gap: 28px;
+  width: 100%;
+}
+
+.payment-method-card {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  background: #f8fbff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 18px 32px;
+  min-width: 0;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+.payment-method-card:hover {
+  border: 2px solid #2563eb;
+  box-shadow: 0 2px 8px 0 rgba(37,99,235,0.08);
+}
+
+.payment-method-img {
+  width: 40px;
+  height: 40px;
+  margin-right: 18px;
+  border-radius: 6px;
+  background: #e2e8f0;
+}
+
+.payment-method-card-label {
+  font-size: 1.18rem;
+  font-weight: 600;
+  color: #22303a;
+}
+
+@media (max-width: 600px) {
+  .payment-container {
+    padding: 16px 4px;
+    max-width: 98vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .payment-method-options {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .payment-method-card {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 16px 12px;
+  }
+}
