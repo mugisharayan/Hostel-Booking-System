@@ -20,6 +20,9 @@ const Home = () => {
       <header className="home-header">
         <h1>Student Hostel Booking</h1>
         <p>Find your perfect home away from home</p>
+        <Link to="/payment" className="payment-link">
+          <button className="payment-button">Go to Payment</button>
+        </Link>
       </header>
 
       <div className="hostels-grid">

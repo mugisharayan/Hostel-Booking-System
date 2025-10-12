@@ -18,6 +18,28 @@
 .home-header p {
   font-size: 1.2rem;
   color: #666;
+  margin-bottom: 20px;
+}
+
+.payment-link {
+  text-decoration: none;
+}
+
+.payment-button {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.payment-button:hover {
+  background: #15803d;
 }
 
 .hostels-grid {
