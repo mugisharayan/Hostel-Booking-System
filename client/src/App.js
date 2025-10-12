@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import StudentPayment from './views/components/StudentPayment';
+import Home from './components/Home';
+import HostelDetails from './components/HostelDetails';
+import StudentPayment from './components/StudentPayment';
 
 function App() {
-  const [showPayment, setShowPayment] = useState(false);
-
-  if (showPayment) {
-    return (
-      <div className="App">
-        <StudentPayment />
-      </div>
-    );
-  }
-
   return (
-    <div className="App">
-      <h1>Hello Worldz</h1>
-      <button onClick={() => setShowPayment(true)}>Student Payment</button>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/hostel/:id" element={<HostelDetails />} />
+          <Route path="/payment" element={<StudentPayment />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
