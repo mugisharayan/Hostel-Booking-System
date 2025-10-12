@@ -41,19 +41,22 @@ function StudentPayment() {
           placeholder="e.g., 2300724223"
         />
       </div>
-      <div className="payment-section">
-        <h3 className="section-title">Payment Method</h3>
-        <hr className="section-divider" />
-        <label className="payment-method-option">
-          <input
-            type="radio"
-            name="paymentMethod"
-            checked
-            readOnly
-            className="payment-radio"
-          />
-          <span className="payment-method-label">Mobile Money (MTN/Airtel)</span>
-        </label>
+      <div className="payment-section payment-method-section">
+        <div className="payment-method-header">
+          <span className="payment-method-icon">📱</span>
+          <h3 className="section-title">Payment Method</h3>
+        </div>
+        <div className="payment-method-subtitle">Select your preferred mobile money provider.</div>
+        <div className="payment-method-options">
+          <div className="payment-method-card">
+            <img src="/static/media/mtn-logo.png" alt="MTN Mobile Money" className="payment-method-img" />
+            <span className="payment-method-card-label">MTN Mobile Money</span>
+          </div>
+          <div className="payment-method-card">
+            <img src="/static/media/airtel-logo.png" alt="Airtel Money" className="payment-method-img" />
+            <span className="payment-method-card-label">Airtel Money</span>
+          </div>
+        </div>
       </div>
       <div className="payment-footer">
         <p>Secure payment powered by...</p>
