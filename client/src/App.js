@@ -1,19 +1,39 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import Home from './components/Home';
 import HostelDetails from './components/HostelDetails';
 import StudentPayment from './components/StudentPayment';
+import Header from './components/Header';
+import Hero from './components/Hero';
+import WhyUs from './components/WhyUs';
+import PopularHostels from './components/PopularHostels';
+import Testimonials from './components/Testimonials';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import './styles.css';
+
+// This component will represent your main landing page.
+const MainPage = () => (
+  <>
+    <Hero />
+    <WhyUs />
+    <PopularHostels />
+    <Testimonials />
+    <Contact />
+  </>
+);
 
 function App() {
   return (
     <Router>
       <div className="App">
+        <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* The root path now renders all your main page components */}
+          <Route path="/" element={<MainPage />} />
           <Route path="/hostel/:id" element={<HostelDetails />} />
           <Route path="/payment" element={<StudentPayment />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );
