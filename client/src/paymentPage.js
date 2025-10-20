@@ -1,114 +1,115 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import PaymentSummary from './PaymentSummary';
-import PaymentForm from './PaymentForm';
-import PaymentStatus from './PaymentStatus';
-import { getBookingDetails, initiatePayment } from '../../services/bookingService';
+import { useParams } from 'react-router-dom';
+import { getBookingDetails } from '../services/bookingService';
+import { initiatePayment } from '../services/paymentService';
 import './PaymentPage.css';
 
-const PaymentPage = () => {
+function PaymentPage() {
   const { bookingId } = useParams();
-  const navigate = useNavigate();
-  
   const [booking, setBooking] = useState(null);
-  const [paymentData, setPaymentData] = useState(null);
-  const [currentStep, setCurrentStep] = useState('summary');
-  const [loading, setLoading] = useState(true);
+  const [studentName, setStudentName] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadBookingDetails();
+    const fetchBooking = async () => {
+      try {
+        setLoading(true);
+        const bookingDetails = await getBookingDetails(bookingId);
+        // The service returns an object with a 'booking' property
+        setBooking(bookingDetails.booking); 
+        setError('');
+      } catch (err) {
+        setError('Failed to fetch booking details. Please try again.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBooking();
   }, [bookingId]);
 
-  const loadBookingDetails = async () => {
-    try {
-      const bookingDetails = await getBookingDetails(bookingId);
-      setBooking(bookingDetails);
-      setLoading(false);
-    } catch (err) {
-      setError('Failed to load booking details');
-      setLoading(false);
+  const handlePayment = async () => {
+    if (!studentName || !studentId || !phoneNumber) {
+      setError('Please fill in all student and payment information.');
+      return;
     }
-  };
-
-  const handlePaymentInit = async (paymentMethod, phoneNumber) => {
     try {
-      setLoading(true);
-      const response = await initiatePayment(bookingId, paymentMethod, phoneNumber);
-      setPaymentData(response);
-      setCurrentStep('processing');
+      // Assuming 'mobile_money' is the payment method
+      const paymentData = await initiatePayment(bookingId, 'mobile_money', phoneNumber);
+      // Handle the response from the payment initiation, e.g., redirect to a payment gateway or show a confirmation
+      console.log('Payment initiated:', paymentData);
+      alert('Payment initiated successfully! Follow the prompts on your phone.');
     } catch (err) {
-      setError('Failed to initiate payment');
-      setLoading(false);
-    }
-  };
-
-  const handlePaymentComplete = (success, receiptUrl) => {
-    if (success) {
-      setCurrentStep('success');
-    } else {
-      setCurrentStep('failed');
+      setError('Payment initiation failed. Please check your details and try again.');
+      console.error(err);
     }
   };
 
   if (loading) {
-    return <div className="loading">Loading payment details...</div>;
+    return <div className="payment-container"><h2>Loading Booking Details...</h2></div>;
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="payment-container"><h2>Error</h2><p>{error}</p></div>;
+  }
+
+  if (!booking) {
+    return <div className="payment-container"><h2>No booking details found.</h2></div>;
   }
 
   return (
-    <div className="payment-page">
-      <div className="payment-container">
-        <h1>Complete Your Hostel Booking</h1>
-        
-        {currentStep === 'summary' && (
-          <PaymentSummary 
-            booking={booking} 
-            onProceed={() => setCurrentStep('form')}
-          />
-        )}
-        
-        {currentStep === 'form' && (
-          <PaymentForm 
-            booking={booking}
-            onPaymentInit={handlePaymentInit}
-            onBack={() => setCurrentStep('summary')}
-          />
-        )}
-        
-        {currentStep === 'processing' && (
-          <PaymentStatus 
-            paymentData={paymentData}
-            onPaymentComplete={handlePaymentComplete}
-          />
-        )}
-        
-        {currentStep === 'success' && (
-          <div className="success-message">
-            <h2>Payment Successful! 🎉</h2>
-            <p>Your hostel booking has been confirmed.</p>
-            <p>A receipt and verification token have been sent to your email.</p>
-            <button onClick={() => navigate('/dashboard')}>
-              Go to Dashboard
-            </button>
+    <div className="payment-container">
+      <h2 className="payment-title">Student Payment</h2>
+      
+      <div className="payment-section">
+        <h3 className="section-title">Booking Details</h3>
+        <hr className="section-divider" />
+        <div className="booking-details-row">
+          <div>
+            <span className="booking-label">Room Type</span>
+            <div className="booking-value">{booking.room.roomType}</div>
           </div>
-        )}
-        
-        {currentStep === 'failed' && (
-          <div className="error-message">
-            <h2>Payment Failed</h2>
-            <p>Please try again or use a different payment method.</p>
-            <button onClick={() => setCurrentStep('form')}>
-              Try Again
-            </button>
+          <div>
+            <span className="booking-label">Room Number</span>
+            <div className="booking-value">{booking.room.roomNumber}</div>
           </div>
-        )}
+          <div>
+            <span className="booking-label">Price</span>
+            <div className="booking-value booking-price">UGX {booking.totalAmount.toLocaleString()}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="payment-section">
+        <h3 className="section-title">Student Information</h3>
+        <hr className="section-divider" />
+        <label className="input-label" htmlFor="studentName">Full name</label>
+        <input id="studentName" className="student-input" type="text" placeholder="e.g., John Doe" value={studentName} onChange={(e) => setStudentName(e.target.value)} />
+        
+        <label className="input-label" htmlFor="studentId">Student ID</label>
+        <input id="studentId" className="student-input" type="text" placeholder="e.g., 2300712345" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
+      </div>
+
+      <div className="payment-section">
+        <h3 className="section-title">Payment Information</h3>
+        <hr className="section-divider" />
+        <label className="input-label" htmlFor="phoneNumber">Mobile Money Phone Number</label>
+        <input id="phoneNumber" className="student-input" type="text" placeholder="e.g., 0771234567" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+        <p>Payment Method: Mobile Money (MTN/Airtel)</p>
+      </div>
+
+      <div className="payment-footer">
+        {error && <p className="error-message">{error}</p>}
+        <p>Secure payment powered by Flutterwave</p>
+        <button className="payment-btn" onClick={handlePayment}>
+          Complete Secure Payment
+        </button>
       </div>
     </div>
   );
-};
+}
 
 export default PaymentPage;

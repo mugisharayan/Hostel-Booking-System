@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HostelDetails from './components/HostelDetails';
-import StudentPayment from './components/StudentPayment';
+import PaymentPage from './paymentPage'; // Import the PaymentPage component
 import Header from './components/Header';
 import Hero from './components/Hero';
 import WhyUs from './components/WhyUs';
@@ -31,7 +31,7 @@ function App() {
           {/* The root path now renders all your main page components */}
           <Route path="/" element={<MainPage />} />
           <Route path="/hostel/:id" element={<HostelDetails />} />
-          <Route path="/payment" element={<StudentPayment />} />
+          <Route path="/payment/:bookingId" element={<PaymentPage />} />
         </Routes>
         <Footer />
       </div>
