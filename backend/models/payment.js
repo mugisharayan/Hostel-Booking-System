@@ -29,7 +29,7 @@ const paymentSchema = mongoose.Schema({
     paymentMethod:{
         type: String,
         required: true,
-        enum:['mobile_money', 'bank_transfer', 'credit/debit_card', 'master_card']
+        enum:['mobile_money', 'bank_transfer', 'credit/debit_card']
     },
     transactionId:{
         type: String,
@@ -44,13 +44,27 @@ const paymentSchema = mongoose.Schema({
     status:{
         type:String,
         required: true,
-        enum:['pending', 'successful', 'failed', 'refunded']
+        enum:['pending', 'successful', 'failed', 'refunded'],
+        default: 'pending'
     },
+    receiptUrl:{
+        type:String,
+        required: false
+    },
+    verificationToken:{
+        type:String,
+        unique:true
+    },
+
     phoneNumber:{
         type: String,
     
     },
     phoneGateway:{
         type: String
-   }
+   },
+   gatewayResponse:{
+    type:Object,
+
+   },
 })
