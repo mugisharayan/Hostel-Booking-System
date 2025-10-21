@@ -1,4 +1,4 @@
-import api from './api';
+import api from '../services/api';
 
 export const initiatePayment = async (bookingId, paymentMethod, phoneNumber) => {
   const response = await api.post('/payments/initiate', {

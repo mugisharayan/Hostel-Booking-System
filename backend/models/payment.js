@@ -4,7 +4,7 @@ const { required } = require('nodemon/lib/config');
 const paymentSchema = mongoose.Schema({
     paymentId:{
         type: String,
-        required: trusted,
+        required: true,
         unique: true
     },
     booking:{

@@ -43,10 +43,17 @@ const PaymentForm = ({ booking, onPaymentInit, onBack }) => {
     if (!validateForm()) return;
 
     setLoading(true);
+    let paymentDetails = {};
+    if (paymentMethod === 'mobile_money') {
+      paymentDetails = { phoneNumber };
+    } else if (paymentMethod === 'card') {
+      paymentDetails = { ...cardDetails };
+    }
+
     try {
-      await onPaymentInit(paymentMethod, phoneNumber);
+      await onPaymentInit(paymentMethod, paymentDetails);
     } catch (error) {
-      console.error('Payment initiation failed:', error);
+      setErrors({ form: 'Payment initiation failed. Please try again.' });
     } finally {
       setLoading(false);
     }
@@ -237,6 +244,7 @@ const PaymentForm = ({ booking, onPaymentInit, onBack }) => {
           )}
         </div>
 
+        {errors.form && <span className="error-text form-error">{errors.form}</span>}
         <div className="form-actions">
           <button 
             type="button" 
@@ -267,5 +275,3 @@ const PaymentForm = ({ booking, onPaymentInit, onBack }) => {
 };
 
 export default PaymentForm;
-
-
