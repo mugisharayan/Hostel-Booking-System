@@ -1,4 +1,4 @@
-import api from '../services/api';
+import api from '../api';
 
 export const getBookingDetails = async (bookingId) => {
   // The 'api' instance automatically adds the base URL and auth token.

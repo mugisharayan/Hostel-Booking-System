@@ -42,13 +42,24 @@ app.post('/api/students/signup', signupStudent);
 app.get('/api/bookings/:bookingId', getBookingDetails);
 app.post('/api/payments/initiate', initiatePayment);
 
-// Serve frontend for production
-// app.use(express.static(path.join(__dirname, '../client/build')));
 
-// app.get('/*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
-// });
+const buildPath = path.resolve(__dirname, '../client/build');
+
+
+app.use(express.static(buildPath));
+
+
+app.get(/.*/, (req, res) => {
+  console.log('Serving React app from:', path.join(buildPath, 'index.html'));
+
+  res.sendFile(path.join(buildPath, 'index.html'));
+});
+
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running at: http://localhost:${PORT}`);
 });
+
+
+
+

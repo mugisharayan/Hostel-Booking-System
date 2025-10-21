@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getBookingDetails } from '../services/bookingService';
 import { initiatePayment } from '../services/paymentService';
-import PaymentForm from './components/PaymentForm'; // Import the PaymentForm component
+import PaymentForm from './PaymentForm'; // Import the PaymentForm component
 import './PaymentPage.css';
 
 function PaymentPage() {
@@ -86,7 +86,8 @@ function PaymentPage() {
         <PaymentForm 
           booking={booking} 
           onPaymentInit={handlePaymentInitiation} 
-          onBack={() => history.goBack()} 
+          onBack={() => navigate(-1)}
+
         />
       </div>
     </div>

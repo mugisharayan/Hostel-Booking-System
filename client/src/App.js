@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HostelDetails from './components/HostelDetails';
-import PaymentPage from './pages/PaymentPage'; // Corrected import path
+import PaymentPage from './components/PaymentPage'; // Corrected import path
 import Header from './components/Header';
 import Hero from './components/Hero';
 import WhyUs from './components/WhyUs';
