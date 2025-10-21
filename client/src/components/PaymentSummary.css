@@ -1,0 +1,83 @@
+/* 
+  Styles for the BookingSummary component.
+  Uses CSS variables defined in a global or parent stylesheet (like paymentPage.css or App.css)
+  for consistency.
+*/
+
+.payment-summary {
+  background-color: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 450px; /* Or adjust as needed */
+  margin: 0 auto; /* Center the component if it's in a larger container */
+}
+
+.payment-summary h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary, #212529);
+  margin: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+}
+
+.summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.summary-item span:first-child {
+  color: var(--text-secondary, #6c757d);
+}
+
+.summary-item span:last-child {
+  font-weight: 500;
+  color: var(--text-primary, #212529);
+}
+
+.summary-item.total,
+.summary-item.balance {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border-color, #dee2e6);
+}
+
+.summary-item.balance span {
+  color: var(--primary-color, #007bff);
+}
+
+.proceed-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--primary-color, #007bff);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.proceed-btn:hover {
+  background-color: #0056b3; /* A darker shade of the primary color */
+}
+
+.proceed-btn:active {
+  transform: scale(0.99);
+}

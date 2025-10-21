@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HostelDetails from './components/HostelDetails';
-import StudentPayment from './components/StudentPayment';
+import PaymentPage from './components/PaymentPage'; // Corrected import path
 import Header from './components/Header';
 import Hero from './components/Hero';
 import WhyUs from './components/WhyUs';
@@ -35,9 +35,6 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/hostel/:id" element={<HostelDetails />} />
           <Route path="/payment" element={<StudentPayment />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/booking" element={<Booking />} />
         </Routes>
         <Footer />
       </div>

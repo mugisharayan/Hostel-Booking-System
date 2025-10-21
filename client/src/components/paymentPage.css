@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #007bff;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --body-bg: #f8f9fa;
+}
+
+.payment-container {
+  font-family: 'Inter', sans-serif;
+  /* Styles moved to .page-container in App.css */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.payment-details-container {
+  background-color: var(--card-bg);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.payment-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.payment-header p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.payment-methods {
+  margin-top: 1.5rem;
+}
+
+.payment-methods h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.options-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.payment-option-card {
+  position: relative;
+  display: block;
+  padding: 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.payment-option-card:hover {
+  border-color: var(--primary-color);
+}
+
+/* Style for when the radio button inside is checked */
+.payment-option-card:has(input:checked) {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.payment-option-card input[type="radio"] {
+  /* Hide the default radio button */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.card-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-details strong {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.card-details span {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.secure-payment-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #e9f7ef;
+  color: #28a745;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.secure-payment-footer svg {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.complete-payment-container {
+  background-color: var(--card-bg);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.complete-payment-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.complete-payment-btn:hover {
+  background-color: #0056b3; /* A darker shade of the primary color */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .payment-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}

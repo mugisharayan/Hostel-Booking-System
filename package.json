@@ -6,8 +6,8 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
     "test": "jest --env=node --detectOpenHandles"
   },
   "repository": {
@@ -25,11 +25,5 @@
   "devDependencies": {
     "jest": "^30.2.0",
     "supertest": "^7.1.4"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "mongoose": "^8.19.2"
   }
 }
