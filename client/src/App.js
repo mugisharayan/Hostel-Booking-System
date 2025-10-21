@@ -9,6 +9,9 @@ import PopularHostels from './components/PopularHostels';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import Booking from './components/Booking';
 import './styles.css';
 
 // This component will represent your main landing page.
@@ -31,7 +34,7 @@ function App() {
           {/* The root path now renders all your main page components */}
           <Route path="/" element={<MainPage />} />
           <Route path="/hostel/:id" element={<HostelDetails />} />
-          <Route path="/payment/:bookingId" element={<PaymentPage />} />
+          <Route path="/payment" element={<StudentPayment />} />
         </Routes>
         <Footer />
       </div>
