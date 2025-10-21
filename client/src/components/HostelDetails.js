@@ -148,7 +148,7 @@ const HostelDetails = () => {
                 {hostel.availableRooms} rooms available
               </p>
             </div>
-            <button className="book-button">Book Now</button>
+            <button className="book-button" onClick={() => navigate('/payment/123')}>Book Now</button>
           </div>
         </div>
       </div>
