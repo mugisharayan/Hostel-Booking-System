@@ -34,7 +34,7 @@ function App() {
           {/* The root path now renders all your main page components */}
           <Route path="/" element={<MainPage />} />
           <Route path="/hostel/:id" element={<HostelDetails />} />
-          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment/:bookingId" element={<PaymentPage />} />
         </Routes>
         <Footer />
       </div>

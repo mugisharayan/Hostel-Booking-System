@@ -24,7 +24,8 @@ body {
 
 body {
     font-family: 'Lato', sans-serif;
-    background: #070e16; /* Set a base background color */
+    background: #070e16 radial-gradient(ellipse at top, #1e3a8a, #070e16);
+    background-attachment: fixed;
 }
 
 /*header*/

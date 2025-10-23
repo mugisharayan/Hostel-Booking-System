@@ -1,4 +1,4 @@
-import React from 'react';
+import { createBooking } from '../services/bookingService';
 import { useParams, useNavigate } from 'react-router-dom';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './HostelDetails.css';
@@ -50,7 +50,18 @@ const HostelDetails = () => {
     }
   };
 
-  const hostel = hostelsData[id];
+  const handleBookNow = async () => {
+    try {
+      const bookingDetails = {
+        // Add any other booking details you need to send to the backend
+      };
+      const newBooking = await createBooking(hostel.id, bookingDetails);
+      navigate(`/payment/${newBooking.id}`);
+    } catch (error) {
+      console.error('Failed to create booking:', error);
+      // Handle error appropriately, e.g., show an error message to the user
+    }
+  };
 
   // Google Maps configuration
   const mapContainerStyle = {
@@ -148,7 +159,7 @@ const HostelDetails = () => {
                 {hostel.availableRooms} rooms available
               </p>
             </div>
-            <button className="book-button" onClick={() => navigate('/payment/123')}>Book Now</button>
+            <button className="book-button" onClick={handleBookNow}>Book Now</button>
           </div>
         </div>
       </div>
