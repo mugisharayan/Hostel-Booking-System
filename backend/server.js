@@ -51,7 +51,7 @@ app.use(express.static(buildPath));
 
 
 app.get(/.*/, (req, res) => {
-// This catch-all route should come after all other routes.
+
 app.get('*', (req, res) => {
   console.log('Serving React app from:', path.join(buildPath, 'index.html'));
 
@@ -64,5 +64,5 @@ app.listen(PORT, () => {
 });
 
 
-
+})
 
