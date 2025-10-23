@@ -38,6 +38,7 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error('MongoDB connection error:', err));
 
 // API Routes
+// API Routes should be defined before the static file serving and catch-all route.
 app.post('/api/students/signup', signupStudent);
 app.get('/api/bookings/:bookingId', getBookingDetails);
 app.post('/api/payments/initiate', initiatePayment);
@@ -50,6 +51,8 @@ app.use(express.static(buildPath));
 
 
 app.get(/.*/, (req, res) => {
+// This catch-all route should come after all other routes.
+app.get('*', (req, res) => {
   console.log('Serving React app from:', path.join(buildPath, 'index.html'));
 
   res.sendFile(path.join(buildPath, 'index.html'));
