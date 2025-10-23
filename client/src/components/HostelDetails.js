@@ -50,6 +50,8 @@ const HostelDetails = () => {
     }
   };
 
+  const hostel = hostelsData[id];
+
   const handleBookNow = async () => {
     try {
       const bookingDetails = {

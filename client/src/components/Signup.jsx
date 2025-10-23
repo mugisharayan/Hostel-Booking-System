@@ -8,21 +8,12 @@ const Signup = () => {
   const [phone, setPhone] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // Try to call backend signup endpoint
-    try {
-      const res = await fetch('/api/students/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone })
-      });
-      const data = await res.json();
-      console.log('Signup response', data);
-      navigate('/');
-    } catch (err) {
-      console.error('Signup error', err);
-    }
+    // Placeholder: call real auth API
+    console.log('Signup', { name, email, phone });
+    // For now just navigate to home
+    navigate('/');
   };
 
   return (

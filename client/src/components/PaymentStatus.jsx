@@ -1,7 +1,7 @@
 
 
 import React, { useEffect } from 'react';
-import { processPayment } from '../../services/paymentService';
+import { processPayment } from '../services/paymentService';
 
 const PaymentStatus = ({ paymentData, onPaymentComplete }) => {
   useEffect(() => {

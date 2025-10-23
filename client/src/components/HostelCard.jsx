@@ -2,7 +2,7 @@ import React from 'react';
 
 const HostelCard = ({ hostel }) => {
     // Destructure the required details from the hostel object
-    const { name, imageUrl, costPerNight, gender, rating } = hostel;
+    const { name, imageUrl, costPerSemester, gender, rating } = hostel;
 
         return (
                 <div className="hostel-card image-overlay-card">
@@ -11,7 +11,7 @@ const HostelCard = ({ hostel }) => {
                             <div className="overlay">
                                 <div className="overlay-content">
                                     <h3 className="hostel-name">{name}</h3>
-                                    <p className="hostel-cost">UGX {costPerNight.toLocaleString()}</p>
+                                    <p className="hostel-cost">UGX {costPerSemester.toLocaleString()}</p>
                                     <p className="hostel-gender">{gender}</p>
                                     {rating && rating.average > 0 ? (
                                         <div className="hostel-rating">★ {rating.average.toFixed(1)} ({rating.reviews})</div>

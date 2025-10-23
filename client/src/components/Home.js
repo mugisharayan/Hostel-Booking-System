@@ -13,6 +13,22 @@ const Home = () => {
       gender: 'Mixed',
       rating: { average: 4.5, reviews: 120 }
     },
+    {
+      id: 2,
+      name: 'University Hall',
+      imageUrl: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400',
+      costPerSemester: 1200000,
+      gender: 'Female',
+      rating: { average: 4.8, reviews: 95 }
+    },
+    {
+      id: 3,
+      name: 'Campus Lodge',
+      imageUrl: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
+      costPerSemester: 650000,
+      gender: 'Male',
+      rating: { average: 4.2, reviews: 78 }
+    }
   ];
 
   return (
