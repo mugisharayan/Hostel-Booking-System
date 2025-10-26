@@ -36,3 +36,5 @@ app.post('/api/students/signup', signupStudent);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Test comment to trigger git change detection
