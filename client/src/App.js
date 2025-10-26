@@ -1,17 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HostelDetails from './components/HostelDetails';
-import PaymentPage from './components/paymentPage';
+
+// --- Auth ---
+import { AuthProvider } from './auth/AuthContext';
+import ProtectedRoute from './auth/ProtectedRoute';
+
+// --- Layout Components ---
 import Header from './components/Header';
+import Footer from './components/Footer';
+
+// --- Page Components ---
+import StudentDashboard from './components/StudentDashboard';
+import LoginPage from './pages/LoginPage';
+import Signup from './components/Signup';
+import PaymentPage from './components/paymentPage';
+import HostelDetails from './components/HostelDetails';
+
+// --- Homepage Section Components ---
 import Hero from './components/Hero';
 import WhyUs from './components/WhyUs';
 import PopularHostels from './components/PopularHostels';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
-import Footer from './components/Footer';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Booking from './components/Booking';
 import './styles.css'; // Ensure this is imported if it contains global styles
 
 // This component will represent your main landing page.
@@ -27,18 +36,29 @@ const MainPage = () => (
 
 function App() {
   return (
-    <Router>
+    <AuthProvider>
       <div className="App">
         <Header />
-        <Routes>
-          {/* The root path now renders all your main page components */}
-          <Route path="/" element={<MainPage />} />
-          <Route path="/hostel/:id" element={<HostelDetails />} />
-          <Route path="/payment/:bookingId" element={<PaymentPage />} />
-        </Routes>
+        <main className="main-content">
+          <Routes>
+            {/* --- Public Routes --- */}
+            <Route path="/" element={<MainPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/hostel/:id" element={<HostelDetails />} />
+
+            {/* --- Protected Student Routes --- */}
+            <Route path="/dashboard" element={
+                <ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>
+            }/>
+            <Route path="/payment/:bookingId" element={
+                <ProtectedRoute role="student"><PaymentPage /></ProtectedRoute>
+            }/>
+          </Routes>
+        </main>
         <Footer />
       </div>
-    </Router>
+    </AuthProvider>
   );
 }
 

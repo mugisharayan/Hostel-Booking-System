@@ -1,0 +1,204 @@
+/* 
+  To match your homepage, you can define CSS variables in your main styles.css
+  and use them here. For example:
+  :root {
+    --primary-color: #007bff;
+    --text-color: #333;
+    --background-color: #f4f7f6;
+  }
+*/
+
+.dashboard-container {
+    padding: 20px 40px;
+    background-color: #f4f7f6; /* var(--background-color) */
+    font-family: sans-serif; /* var(--font-family) */
+}
+
+.dashboard-header {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.dashboard-header h1 {
+    color: #333; /* var(--text-color) */
+    margin: 0 0 5px 0;
+}
+
+.dashboard-header p {
+    color: #666; /* var(--text-light) */
+    font-size: 1.1em;
+    margin: 0;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-card h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: #0056b3; /* var(--primary-color) */
+}
+
+/* Specific Card Styles */
+.booking-summary p, .payment-status p {
+    margin: 8px 0;
+    color: #555;
+}
+
+.outstanding-balance {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #d9534f;
+    margin-bottom: 15px !important;
+}
+
+.payment-status ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.payment-status li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.payment-status li:last-child {
+    border-bottom: none;
+}
+
+.quick-actions {
+    gap: 10px;
+}
+
+.quick-actions button {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff; /* var(--primary-color) */
+    color: white;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.quick-actions button:hover {
+    background-color: #0056b3; /* A darker shade of your primary color */
+}
+
+.notifications .notification-item {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.notification-item.type-reminder {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+.notification-item.type-alert {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+}
+
+.profile-summary {
+    align-items: center;
+    text-align: center;
+}
+.profile-summary .profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid #eee;
+}
+
+.maintenance-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.maintenance-section textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-height: 80px;
+    font-family: inherit;
+    resize: vertical;
+}
+.maintenance-section button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.maintenance-list {
+    list-style: none;
+    padding: 0;
+}
+.maintenance-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.booking-history table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+.booking-history th, .booking-history td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid #ddd;
+}
+.booking-history th {
+    background-color: #f8f9fa;
+}
+.booking-history td[colspan="5"] {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}
+
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #fff;
+    text-transform: capitalize;
+}
+.status-booked, .status-completed, .status-checked-in { background-color: #28a745; }
+.status-in-progress { background-color: #ffc107; color: #333; }
+.status-pending { background-color: #17a2b8; }
+.status-cancelled { background-color: #6c757d; }
+
+/* Loader and Error states */
+.loader, .error-message {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2em;
+    color: #555;
+}

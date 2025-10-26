@@ -39,6 +39,7 @@ mongoose.connect(MONGO_URI)
 
 // API Routes
 // API Routes should be defined before the static file serving and catch-all route.
+app.use('/api/auth', require('./routes/authRoutes')); // Add auth routes
 app.post('/api/students/signup', signupStudent);
 app.get('/api/bookings/:bookingId', getBookingDetails);
 app.post('/api/payments/initiate', initiatePayment);
@@ -65,4 +66,3 @@ app.listen(PORT, () => {
 
 
 })
-
