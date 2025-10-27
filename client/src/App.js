@@ -10,7 +10,7 @@ import Footer from './components/Footer';
 
 // --- Page Components ---
 import StudentDashboard from './components/StudentDashboard';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './components/Login';
 import Signup from './components/Signup';
 import PaymentPage from './components/paymentPage';
 import HostelDetails from './components/HostelDetails';
@@ -21,7 +21,8 @@ import WhyUs from './components/WhyUs';
 import PopularHostels from './components/PopularHostels';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
-import './styles.css'; // Ensure this is imported if it contains global styles
+import { Routes, Route } from 'react-router-dom';
+import './styles.css';
 
 // This component will represent your main landing page.
 const MainPage = () => (

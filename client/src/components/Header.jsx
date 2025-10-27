@@ -49,6 +49,9 @@ function Header() {
           <li><a href="#hostels" onClick={(e) => scrollToSection(e, 'hostels')}>Hostels</a></li>
           <li><a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>Contact Us</a></li>
           <li>
+            <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>Dashboard</NavLink>
+          </li>
+          <li>
             <NavLink to="/login" className={({ isActive }) => isActive ? 'btn-login active-btn' : 'btn-login'}>
               Log In
             </NavLink>

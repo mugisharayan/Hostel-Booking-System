@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const asyncHandler = require('express-async-handler');
-const Student = require('../models/studentModel');
+const Student = require('../models/Student');
 
 // Generate JWT
 const generateToken = (id, role) => {

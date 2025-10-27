@@ -1,69 +1,78 @@
-/* 
-  To match your homepage, you can define CSS variables in your main styles.css
-  and use them here. For example:
-  :root {
-    --primary-color: #007bff;
-    --text-color: #333;
-    --background-color: #f4f7f6;
-  }
-*/
+
+:root {
+    --primary-color: #3B82F6;
+    --background-dark: #070e16;
+    --card-background: linear-gradient(145deg, #1f2937, #111827);
+    --text-light: #ccc;
+    --text-white: #fff;
+    --border-color: #4b5563;
+}
 
 .dashboard-container {
-    padding: 20px 40px;
-    background-color: #f4f7f6; /* var(--background-color) */
-    font-family: sans-serif; /* var(--font-family) */
+    padding: 40px;
+    background: var(--background-dark) radial-gradient(ellipse at top, #1e3a8a, var(--background-dark));
+    color: var(--text-light);
+    font-family: 'Lato', sans-serif;
 }
 
 .dashboard-header {
-    margin-bottom: 25px;
+    margin-bottom: 40px;
     text-align: center;
 }
 
 .dashboard-header h1 {
-    color: #333; /* var(--text-color) */
-    margin: 0 0 5px 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 36px;
+    color: var(--text-white);
+    margin: 0 0 10px 0;
 }
 
 .dashboard-header p {
-    color: #666; /* var(--text-light) */
-    font-size: 1.1em;
-    margin: 0;
+    font-size: 18px;
 }
 
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
+    gap: 30px;
 }
 
 .dashboard-card {
-    background-color: #fff;
+    background: var(--card-background);
     border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
 }
 
 .dashboard-card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
     margin-top: 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
-    margin-bottom: 15px;
-    color: #0056b3; /* var(--primary-color) */
+    margin-bottom: 20px;
+    color: var(--text-white);
 }
 
 /* Specific Card Styles */
 .booking-summary p, .payment-status p {
-    margin: 8px 0;
-    color: #555;
+    margin: 10px 0;
+    font-size: 16px;
 }
 
 .outstanding-balance {
-    font-size: 1.5em;
+    font-size: 28px;
     font-weight: bold;
-    color: #d9534f;
-    margin-bottom: 15px !important;
+    color: #f97316; /* A vibrant orange for contrast */
+    margin-bottom: 20px !important;
 }
 
 .payment-status ul {
@@ -74,45 +83,49 @@
 .payment-status li {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
 }
 .payment-status li:last-child {
     border-bottom: none;
 }
 
 .quick-actions {
-    gap: 10px;
+    gap: 15px;
 }
 
 .quick-actions button {
     padding: 12px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff; /* var(--primary-color) */
+    background-color: var(--primary-color);
     color: white;
     cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .quick-actions button:hover {
-    background-color: #0056b3; /* A darker shade of your primary color */
+    background-color: #2563EB;
+    transform: translateY(-2px);
 }
 
 .notifications .notification-item {
-    padding: 10px;
+    padding: 15px;
     border-radius: 5px;
     margin-bottom: 10px;
+    border-left-width: 4px;
+    border-left-style: solid;
 }
 
 .notification-item.type-reminder {
-    background-color: #fff3cd;
-    border-left: 4px solid #ffc107;
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left-color: #ffc107;
 }
 .notification-item.type-alert {
-    background-color: #f8d7da;
-    border-left: 4px solid #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left-color: #dc3545;
 }
 
 .profile-summary {
@@ -120,36 +133,39 @@
     text-align: center;
 }
 .profile-summary .profile-pic {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 15px;
-    border: 3px solid #eee;
+    margin-bottom: 20px;
+    border: 3px solid var(--primary-color);
 }
 
 .maintenance-section form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 20px;
 }
 .maintenance-section textarea {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    min-height: 80px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: #111827;
+    color: var(--text-light);
+    min-height: 100px;
     font-family: inherit;
     resize: vertical;
 }
 .maintenance-section button {
     align-self: flex-end;
     padding: 10px 20px;
-    background-color: #28a745;
+    background-color: #10b981; /* Green for submit actions */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .maintenance-list {
@@ -160,32 +176,34 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .booking-history table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9em;
+    font-size: 15px;
 }
 .booking-history th, .booking-history td {
     text-align: left;
-    padding: 10px 8px;
-    border-bottom: 1px solid #ddd;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border-color);
 }
 .booking-history th {
-    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-white);
+    background-color: rgba(59, 130, 246, 0.1);
 }
 .booking-history td[colspan="5"] {
     text-align: center;
-    padding: 20px;
-    color: #777;
+    padding: 30px;
 }
 
 .status-badge {
-    padding: 3px 8px;
+    padding: 4px 10px;
     border-radius: 12px;
-    font-size: 0.8em;
+    font-size: 12px;
     font-weight: bold;
     color: #fff;
     text-transform: capitalize;
@@ -198,7 +216,7 @@
 /* Loader and Error states */
 .loader, .error-message {
     text-align: center;
-    padding: 50px;
-    font-size: 1.2em;
-    color: #555;
+    padding: 60px;
+    font-size: 20px;
+    color: var(--text-light);
 }

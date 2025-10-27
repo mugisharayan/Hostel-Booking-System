@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getStudentDashboard } from '../services/api'; // Assuming api.js is in a services folder
+import { getStudentDashboard } from '../api';
 import { useAuth } from '../auth/AuthContext';
 import './StudentDashboard.css';
 

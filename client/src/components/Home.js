@@ -39,6 +39,9 @@ const Home = () => {
         <Link to="/payment" className="payment-link">
           <button className="payment-button">Go to Payment</button>
         </Link>
+         <Link to="/student/dashboard">
+          <button>Go to My Dashboard</button>
+        </Link>
       </header>
 
       <div className="hostels-grid">
