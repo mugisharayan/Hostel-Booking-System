@@ -43,7 +43,7 @@ class PaymentGatewayService {
       setTimeout(() => {
         resolve({
           success: true,
-          transactionId: MM_${Date.now()},
+          transactionId: `MM_${Date.now()}`,
           message: 'Payment initiated successfully'
         });
       }, 2000);
@@ -56,7 +56,7 @@ class PaymentGatewayService {
       setTimeout(() => {
         resolve({
           approved: true,
-          transactionId: CARD_${Date.now()},
+          transactionId: `CARD_${Date.now()}`,
           message: 'Payment processed successfully'
         });
       }, 3000);

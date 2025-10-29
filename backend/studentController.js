@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler');
-const Student = require('../models/studentModel');
-const Booking = require('../models/bookingModel');
-const Payment = require('../models/paymentModel');
-const MaintenanceRequest = require('../models/maintenanceRequestModel');
+const Student = require('./models/Student.js');
+const Booking = require('./models/booking.js');
+const Payment = require('./models/payment.js');
+// const MaintenanceRequest = require('../models/maintenanceRequestModel');
 
 // @desc    Get all data for the student dashboard
 // @route   GET /api/students/dashboard
@@ -44,7 +44,7 @@ const getStudentDashboardData = asyncHandler(async (req, res) => {
   }).sort({ createdAt: -1 });
 
   // 5. Fetch Maintenance Requests
-  const maintenanceRequests = await MaintenanceRequest.find({ student: studentId }).sort({ createdAt: -1 });
+  const maintenanceRequests = []; // await MaintenanceRequest.find({ student: studentId }).sort({ createdAt: -1 });
 
   // 6. Mock Notifications (a real implementation would use a dedicated collection)
   const notifications = [
@@ -57,7 +57,7 @@ const getStudentDashboardData = asyncHandler(async (req, res) => {
     currentBooking,
     paymentHistory,
     bookingHistory,
-    maintenanceRequests,
+    // maintenanceRequests,
     notifications,
   });
 });
