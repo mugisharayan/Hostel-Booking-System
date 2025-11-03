@@ -14,7 +14,7 @@ const paymentSchema = mongoose.Schema({
     },
     student:{
         type: mongoose.Schema.Types.ObjectId,
-                ref :'users',
+                ref :'students',
                 required: true 
     },
     amount:{
