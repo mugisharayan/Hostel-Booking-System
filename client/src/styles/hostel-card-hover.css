@@ -1,0 +1,6 @@
+/* Enhanced Hostel Card Hover Effects */
+.modern-hostel-card:hover {
+  transform: translateY(-12px) scale(1.02) !important;
+  box-shadow: 0 20px 60px rgba(14, 165, 233, 0.25) !important;
+  border-color: #0ea5e9 !important;
+}

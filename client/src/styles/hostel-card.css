@@ -1,0 +1,418 @@
+/* Modern Hostel Card Styles */
+.modern-hostel-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modern-hostel-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(14, 165, 233, 0.25);
+  border-color: #0ea5e9;
+}
+
+/* Image Container */
+.hostel-image-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.hostel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.modern-hostel-card:hover .hostel-image {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+}
+
+.favorite-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.favorite-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.favorite-btn.favorited {
+  background: #ff4757;
+  color: white;
+}
+
+.favorite-btn i {
+  font-size: 16px;
+  color: #ff4757;
+}
+
+.favorite-btn.favorited i {
+  color: white;
+}
+
+.price-badge {
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.price-from {
+  display: block;
+  font-size: 10px;
+  opacity: 0.9;
+  margin-bottom: 2px;
+}
+
+.price-amount {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.price-request {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Content Area */
+.hostel-content {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hostel-header {
+  margin-bottom: 16px;
+}
+
+.hostel-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #718096;
+  font-size: 14px;
+}
+
+.location-info i {
+  color: #0ea5e9;
+  font-size: 12px;
+}
+
+/* Amenities Grid */
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: #f7fafc;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #4a5568;
+  transition: all 0.2s ease;
+}
+
+.amenity-item:hover {
+  background: #edf2f7;
+  transform: translateY(-1px);
+}
+
+.amenity-item i {
+  color: #0ea5e9;
+  font-size: 12px;
+  width: 14px;
+  text-align: center;
+}
+
+.amenity-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.more-amenities {
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+  color: white;
+}
+
+.more-amenities i {
+  color: white;
+}
+
+/* Room and Contact Info */
+.room-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.room-count,
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4a5568;
+}
+
+.room-count i,
+.contact-info i {
+  color: #0ea5e9;
+  font-size: 12px;
+}
+
+/* Card Actions */
+.card-actions {
+  margin-top: auto;
+}
+
+.view-details-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.view-details-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
+  text-decoration: none;
+  color: white;
+}
+
+.view-details-btn i {
+  transition: transform 0.3s ease;
+}
+
+.view-details-btn:hover i {
+  transform: translateX(4px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modern-hostel-card {
+    border-radius: 12px;
+  }
+  
+  .hostel-image-container {
+    height: 180px;
+  }
+  
+  .hostel-content {
+    padding: 16px;
+  }
+  
+  .hostel-name {
+    font-size: 16px;
+  }
+  
+  .amenities-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  
+  .room-info {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .hostel-image-container {
+    height: 160px;
+  }
+  
+  .image-overlay {
+    padding: 12px;
+  }
+  
+  .favorite-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .price-badge {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}
+
+/* Modern Load More Button */
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+}
+
+.modern-load-more-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+  overflow: hidden;
+}
+
+.modern-load-more-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.modern-load-more-btn:hover::before {
+  left: 100%;
+}
+
+.modern-load-more-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4);
+}
+
+.modern-load-more-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.btn-text {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.modern-load-more-btn:hover .btn-icon {
+  transform: translateY(2px);
+}
+
+.btn-count {
+  font-size: 12px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Responsive Load More Button */
+@media (max-width: 768px) {
+  .modern-load-more-btn {
+    padding: 14px 24px;
+    font-size: 14px;
+    gap: 10px;
+  }
+  
+  .btn-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .btn-count {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modern-load-more-btn {
+    padding: 12px 20px;
+    font-size: 13px;
+    gap: 8px;
+  }
+}
+

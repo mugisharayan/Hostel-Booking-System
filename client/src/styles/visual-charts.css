@@ -1,0 +1,195 @@
+/* Visual Charts CSS */
+
+.visual-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.visual-chart-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.visual-chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.visual-chart {
+  margin-top: 1rem;
+}
+
+/* Bar Chart */
+.chart-bar {
+  height: 40px;
+  background: #f1f5f9;
+  border-radius: 20px;
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.bar-segment {
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.bar-segment.available {
+  background: #10b981;
+}
+
+.bar-segment.occupied {
+  background: #3b82f6;
+}
+
+.bar-segment.booked {
+  background: #f59e0b;
+}
+
+.bar-segment.maintenance {
+  background: #ef4444;
+}
+
+.bar-segment.partial {
+  background: #8b5cf6;
+}
+
+/* Chart Legend */
+.chart-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #4a5568;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.available {
+  background: #10b981;
+}
+
+.legend-dot.occupied {
+  background: #3b82f6;
+}
+
+.legend-dot.booked {
+  background: #f59e0b;
+}
+
+.legend-dot.maintenance {
+  background: #ef4444;
+}
+
+.legend-dot.partial {
+  background: #8b5cf6;
+}
+
+/* Progress Rings */
+.progress-rings {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.progress-ring {
+  text-align: center;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  min-width: 120px;
+}
+
+.ring-label {
+  font-size: 0.9rem;
+  color: #718096;
+  margin-bottom: 0.5rem;
+}
+
+.ring-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Occupancy Meter */
+.occupancy-meter {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.meter-bar {
+  height: 20px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #3b82f6);
+  border-radius: 10px;
+  transition: width 0.8s ease;
+  position: relative;
+}
+
+.meter-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.meter-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .visual-charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-legend {
+    grid-template-columns: 1fr;
+  }
+  
+  .progress-rings {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .progress-ring {
+    width: 100%;
+  }
+}
