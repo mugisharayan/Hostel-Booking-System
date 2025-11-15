@@ -1,230 +1,136 @@
-// server/controllers/user.controller.js
-import asyncHandler from 'express-async-handler';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
+import { asyncMiddleware, createErrorResponse } from '../utils/middleware.helpers.js';
 
 /**
- * @desc    Get user profile
- * @route   GET /api/users/profile
- * @access  Private
+ * @desc    Protect routes - Authentication middleware
+ * @access  Private routes
  */
-const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).select('-password');
+export const protect = asyncMiddleware(async (req, res, next) => {
+  let token;
 
-  if (user) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      fullName: user.name,
-      email: user.email,
-      phone: user.phone,
-      role: user.role,
-      course: user.course,
-      gender: user.gender,
-      dateOfBirth: user.dateOfBirth,
-      yearOfStudy: user.yearOfStudy,
-      studentNumber: user.studentNumber,
-      residence: user.residence,
-      nextOfKinName: user.nextOfKinName,
-      nextOfKinContact: user.nextOfKinContact,
-      guardianName: user.guardianName,
-      guardianContact: user.guardianContact,
-      profileCompleted: user.profileCompleted,
-      profilePicture: user.profilePicture,
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});
-
-/**
- * @desc    Register a new user
- * @route   POST /api/users/register
- * @access  Public
- */
-const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, name, email, phone, course, gender, dateOfBirth, yearOfStudy, studentNumber, residence, nextOfKin, guardian, notes, healthIssues, role, password } = req.body;
-
-  console.log('Registration attempt:', { email, name: name || fullName, role });
-
-  const userName = name || fullName;
-  if (!userName || !email || !role) {
-    res.status(400);
-    throw new Error('Please provide all required fields');
-  }
-
-  const normalizedEmail = email.toLowerCase().trim();
-  console.log('Checking for existing user with email:', normalizedEmail);
-  
-  const userExists = await User.findOne({ email: normalizedEmail });
-  console.log('User exists check result:', !!userExists);
-  
-  if (userExists) {
-    console.log('Found existing user:', userExists._id, userExists.email);
-    res.status(400);
-    throw new Error('User already exists');
-  }
-  
-  console.log('No existing user found, proceeding with registration');
-
-  try {
-    const user = await User.create({
-      name: userName,
-      email: normalizedEmail,
-      password: password || 'defaultPassword123',
-      phone: phone || '',
-      role,
-    });
-    
-    console.log('User created successfully:', user._id);
-
-    if (user) {
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '30d',
-      });
-
-      res.status(201).json({
-        _id: user._id,
-        fullName: user.name,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        token,
-      });
-    } else {
-      res.status(400);
-      throw new Error('Invalid user data');
+  // Check for token in Authorization header
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      // Get token from header
+      token = req.headers.authorization.split(' ')[1];
+      
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      
+      // Get user from token
+      req.user = await User.findById(decoded.userId).select('-password');
+      
+      if (!req.user) {
+        return createErrorResponse(res, 401, 'User not found');
+      }
+      
+      // Check if user is active
+      if (req.user.isActive === false) {
+        return createErrorResponse(res, 401, 'User account is deactivated');
+      }
+      
+      next();
+    } catch (error) {
+      console.error('Token verification failed:', error.message);
+      
+      if (error.name === 'TokenExpiredError') {
+        return createErrorResponse(res, 401, 'Token expired');
+      } else if (error.name === 'JsonWebTokenError') {
+        return createErrorResponse(res, 401, 'Invalid token');
+      }
+      
+      return createErrorResponse(res, 401, 'Not authorized');
     }
-  } catch (createError) {
-    console.error('User creation error:', createError);
-    res.status(500);
-    throw new Error('Failed to create user: ' + createError.message);
+  }
+
+  if (!token) {
+    return createErrorResponse(res, 401, 'Not authorized, no token provided');
   }
 });
 
 /**
- * @desc    Auth user & set token
- * @route   POST /api/users/login
- * @access  Public
+ * @desc    Optional authentication middleware
+ * @access  Public routes that can benefit from user context
  */
-const loginUser = asyncHandler(async (req, res) => {
-  console.log('Login request:', req.body.email);
-  const { email, password } = req.body;
+export const optionalAuth = asyncMiddleware(async (req, res, next) => {
+  let token;
 
-  if (!email || !password) {
-    res.status(400);
-    throw new Error('Please provide email and password');
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(decoded.userId).select('-password');
+    } catch (error) {
+      // Silently fail for optional auth
+      console.warn('Optional auth failed:', error.message);
+    }
   }
 
-  const user = await User.findOne({ email: email.toLowerCase() });
-
-  if (user && (await bcrypt.compare(password, user.password))) {
-    // Generate JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '30d',
-    });
-
-    console.log('User logged in successfully:', user.email);
-    res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      fullName: user.name,
-      email: user.email,
-      role: user.role,
-      phone: user.phone,
-      course: user.course,
-      profilePicture: user.profilePicture,
-      token: token,
-    });
-  } else {
-    console.log('Login failed for:', email);
-    res.status(401).json({ message: 'Invalid email or password' });
-  }
-});
-const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-
-  if (user) {
-    user.name = req.body.fullName || req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.phone = req.body.phone || user.phone;
-    user.course = req.body.course || user.course;
-    user.gender = req.body.gender || user.gender;
-    user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
-    user.yearOfStudy = req.body.yearOfStudy || user.yearOfStudy;
-    user.studentNumber = req.body.studentNumber || user.studentNumber;
-    user.residence = req.body.residence || user.residence;
-    user.nextOfKinName = req.body.nextOfKinName || user.nextOfKinName;
-    user.nextOfKinContact = req.body.nextOfKinContact || user.nextOfKinContact;
-    user.guardianName = req.body.guardianName || user.guardianName;
-    user.guardianContact = req.body.guardianContact || user.guardianContact;
-    user.profileCompleted = req.body.profileCompleted !== undefined ? req.body.profileCompleted : user.profileCompleted;
-    user.profilePicture = req.body.profilePicture || user.profilePicture;
-
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      fullName: updatedUser.name,
-      email: updatedUser.email,
-      phone: updatedUser.phone,
-      role: updatedUser.role,
-      course: updatedUser.course,
-      gender: updatedUser.gender,
-      dateOfBirth: updatedUser.dateOfBirth,
-      yearOfStudy: updatedUser.yearOfStudy,
-      studentNumber: updatedUser.studentNumber,
-      residence: updatedUser.residence,
-      nextOfKinName: updatedUser.nextOfKinName,
-      nextOfKinContact: updatedUser.nextOfKinContact,
-      guardianName: updatedUser.guardianName,
-      guardianContact: updatedUser.guardianContact,
-      profileCompleted: updatedUser.profileCompleted,
-      profilePicture: updatedUser.profilePicture,
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
+  next();
 });
 
-const changePassword = asyncHandler(async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  const user = await User.findById(req.user._id);
-
-  if (!user) {
-    res.status(404);
-    throw new Error('User not found');
-  }
-
-  const isMatch = await bcrypt.compare(currentPassword, user.password);
-  if (!isMatch) {
-    res.status(400);
-    throw new Error('Current password is incorrect');
-  }
-
-  user.password = newPassword;
-  await user.save();
-
-  res.json({ message: 'Password updated successfully' });
-});
-
-// Temporary debug endpoint - remove in production
-const debugUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({}, 'email name createdAt');
-  console.log('All users in database:', users);
-  res.json(users);
-});
-
-export {
-  registerUser,
-  loginUser,
-  getUserProfile,
-  updateUserProfile,
-  changePassword,
-  debugUsers,
+/**
+ * @desc    Check if user owns the resource
+ * @param   {string} resourceField - Field name to check ownership
+ */
+export const checkOwnership = (resourceField = 'user') => {
+  return asyncMiddleware(async (req, res, next) => {
+    const resourceId = req.params.id;
+    
+    // This would need to be customized based on the resource model
+    // For now, we'll check if the user ID matches
+    if (req.user._id.toString() !== resourceId) {
+      return createErrorResponse(res, 403, 'Access denied - not resource owner');
+    }
+    
+    next();
+  });
 };
+
+/**
+ * @desc    Rate limiting for authentication attempts
+ */
+const authAttempts = new Map();
+
+export const authRateLimit = (maxAttempts = 5, windowMs = 15 * 60 * 1000) => {
+  return (req, res, next) => {
+    const key = req.ip + req.body.email;
+    const now = Date.now();
+    
+    if (!authAttempts.has(key)) {
+      authAttempts.set(key, { count: 1, resetTime: now + windowMs });
+      return next();
+    }
+    
+    const attempts = authAttempts.get(key);
+    
+    if (now > attempts.resetTime) {
+      authAttempts.set(key, { count: 1, resetTime: now + windowMs });
+      return next();
+    }
+    
+    if (attempts.count >= maxAttempts) {
+      return createErrorResponse(
+        res, 
+        429, 
+        `Too many authentication attempts. Try again in ${Math.ceil((attempts.resetTime - now) / 60000)} minutes.`
+      );
+    }
+    
+    attempts.count++;
+    next();
+  };
+};
+
+/**
+ * @desc    Clean up expired rate limit entries
+ */
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, value] of authAttempts.entries()) {
+    if (now > value.resetTime) {
+      authAttempts.delete(key);
+    }
+  }
+}, 60000); // Clean up every minute
