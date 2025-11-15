@@ -1,75 +1,100 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import custodianService from '../../service/custodian.service';
+import React, { useState, useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { useNotifications } from '../../hooks/useNotifications';
 import './CustodianNotificationBell.css';
 
-const CustodianNotificationBell = ({ onClick }) => {
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
+// Constants
+const POLLING_INTERVAL = 30000; // 30 seconds
+const ANIMATION_DURATION = 600; // 0.6 seconds
+const MAX_BADGE_COUNT = 99;
+const ERROR_MESSAGES = {
+  LOAD_FAILED: 'Failed to load notifications'
+};
+
+// Helper functions
+const formatBadgeCount = (count) => count > MAX_BADGE_COUNT ? '99+' : count;
+
+const buildClassName = (baseClass, conditionalClasses) => {
+  return [baseClass, ...conditionalClasses.filter(Boolean)].join(' ');
+};
+
+const buildNotificationText = (count) => {
+  const hasUnread = count > 0;
+  const countText = hasUnread ? ` (${count} unread)` : '';
+  return `Notifications${countText}`;
+};
+
+const buildAriaLabel = (count) => {
+  const hasUnread = count > 0;
+  const statusText = hasUnread ? `, ${count} unread` : ', no unread notifications';
+  return `Notifications${statusText}`;
+};
+
+const CustodianNotificationBell = ({ 
+  onClick, 
+  pollingInterval = POLLING_INTERVAL,
+  animationDuration = ANIMATION_DURATION 
+}) => {
+  const { unreadCount, isLoading, hasError } = useNotifications(pollingInterval);
   const [isAnimating, setIsAnimating] = useState(false);
+  const previousCountRef = useRef(0);
 
-  const loadNotifications = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setHasError(false);
-      const notifications = await custodianService.getNotifications();
-      const newCount = notifications.length;
-      
-      // Trigger animation if count increased
-      if (newCount > unreadCount) {
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 600);
-      }
-      
-      setUnreadCount(newCount);
-    } catch (error) {
-      console.error('Failed to load notifications:', error);
-      setHasError(true);
-    } finally {
-      setIsLoading(false);
+  const triggerAnimation = useCallback(() => {
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), animationDuration);
+  }, [animationDuration]);
+
+  // Trigger animation when count increases
+  React.useEffect(() => {
+    if (unreadCount > previousCountRef.current) {
+      triggerAnimation();
     }
-  }, [unreadCount]);
+    previousCountRef.current = unreadCount;
+  }, [unreadCount, triggerAnimation]);
 
-  useEffect(() => {
-    loadNotifications();
-    const interval = setInterval(loadNotifications, 30000);
-    return () => clearInterval(interval);
-  }, [loadNotifications]);
+  const handleClick = useCallback(() => {
+    onClick?.();
+  }, [onClick]);
 
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
+  // Build dynamic class names
+  const buttonClassName = buildClassName('icon-btn notification-bell', [
+    isAnimating && 'animate-bell',
+    hasError && 'error'
+  ]);
+
+  const iconClassName = buildClassName('fa-solid fa-bell', [
+    isLoading && 'fa-spin'
+  ]);
 
   return (
     <button 
-      className={`icon-btn notification-bell ${
-        isAnimating ? 'animate-bell' : ''
-      } ${
-        hasError ? 'error' : ''
-      }`}
+      className={buttonClassName}
       onClick={handleClick}
-      title={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
-      aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ', no unread notifications'}`}
+      title={buildNotificationText(unreadCount)}
+      aria-label={buildAriaLabel(unreadCount)}
       disabled={isLoading}
     >
-      <i className={`fa-solid fa-bell ${isLoading ? 'fa-spin' : ''}`}></i>
+      <i className={iconClassName} />
+      
       {unreadCount > 0 && (
-        <span 
-          className="notification-badge"
-          aria-hidden="true"
-        >
-          {unreadCount > 99 ? '99+' : unreadCount}
+        <span className="notification-badge" aria-hidden="true">
+          {formatBadgeCount(unreadCount)}
         </span>
       )}
+      
       {hasError && (
-        <span className="error-indicator" title="Failed to load notifications">
-          <i className="fa-solid fa-exclamation-triangle"></i>
+        <span className="error-indicator" title={ERROR_MESSAGES.LOAD_FAILED}>
+          <i className="fa-solid fa-exclamation-triangle" />
         </span>
       )}
     </button>
   );
+};
+
+CustodianNotificationBell.propTypes = {
+  onClick: PropTypes.func,
+  pollingInterval: PropTypes.number,
+  animationDuration: PropTypes.number
 };
 
 export default CustodianNotificationBell;
