@@ -1,93 +1,93 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+import {
+  GENDER_TYPES,
+  USER_ROLES,
+  createEmailField,
+  createRequiredStringField,
+  createOptionalStringField,
+  createEnumField,
+  createPasswordHashMiddleware,
+  createPasswordMatchMethod
+} from '../utils/model.helpers.js';
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
+    // Basic information
+    name: createRequiredStringField(),
+    email: createEmailField(),
+    password: createRequiredStringField({ select: false }),
+    phone: createOptionalStringField(),
+    role: createEnumField(USER_ROLES, true),
+    
+    // Academic information
+    course: createOptionalStringField(),
+    yearOfStudy: createOptionalStringField(),
+    studentNumber: createOptionalStringField(),
+    
+    // Personal information
+    gender: createEnumField(GENDER_TYPES),
+    dateOfBirth: { type: Date },
+    residence: createOptionalStringField(),
+    profilePicture: createOptionalStringField(),
+    
+    // Contact information
+    nextOfKinName: createOptionalStringField(),
+    nextOfKinContact: createOptionalStringField(),
+    guardianName: createOptionalStringField(),
+    guardianContact: createOptionalStringField(),
+    
+    // Legacy nested objects (for backward compatibility)
+    nextOfKin: {
+      name: createOptionalStringField(),
+      contact: createOptionalStringField(),
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
+    guardian: {
+      name: createOptionalStringField(),
+      contact: createOptionalStringField(),
     },
-    password: {
-      type: String,
-      required: true,
-    },
-    phone: {
-      type: String,
-    },
-    course: {
-      type: String,
-    },
-    // Booking profile fields
-    gender: {
-      type: String,
-      enum: ['male', 'female'],
-    },
-    dateOfBirth: {
-      type: Date,
-    },
-    yearOfStudy: {
-      type: String,
-    },
-    studentNumber: {
-      type: String,
-    },
-    residence: {
-      type: String,
-    },
-    nextOfKinName: String,
-    nextOfKinContact: String,
-    guardianName: String,
-    guardianContact: String,
+    
+    // Additional information
+    notes: createOptionalStringField(),
+    healthIssues: createOptionalStringField(),
+    
+    // Profile status
     profileCompleted: {
       type: Boolean,
       default: false
     },
-    profilePicture: {
-      type: String,
-    },
-    nextOfKin: {
-      name: String,
-      contact: String,
-    },
-    guardian: {
-      name: String,
-      contact: String,
-    },
-    notes: {
-      type: String,
-    },
-    healthIssues: {
-      type: String,
-    },
-    role: {
-      type: String,
-      enum: ['student', 'custodian', 'Student', 'Custodian'],
-      required: true,
-    },
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
 );
 
-// Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
-    return next();
-  }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+// Indexes for better query performance
+userSchema.index({ email: 1 });
+userSchema.index({ role: 1 });
+userSchema.index({ studentNumber: 1 });
+
+// Virtual for full name (if needed)
+userSchema.virtual('fullName').get(function() {
+  return this.name;
 });
 
-// Match user entered password to hashed password in database
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+// Pre-save middleware
+userSchema.pre('save', createPasswordHashMiddleware());
+
+// Instance methods
+userSchema.methods.matchPassword = createPasswordMatchMethod();
+
+userSchema.methods.isProfileComplete = function() {
+  const requiredFields = ['name', 'email', 'phone', 'gender', 'course'];
+  return requiredFields.every(field => this[field]);
+};
+
+userSchema.methods.toSafeObject = function() {
+  const userObject = this.toObject();
+  delete userObject.password;
+  return userObject;
 };
 
 const User = mongoose.model('User', userSchema);
