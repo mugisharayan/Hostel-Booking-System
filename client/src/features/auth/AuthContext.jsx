@@ -1,8 +1,15 @@
 import React, { useState, createContext, useEffect } from 'react';
 import authService from '../../service/auth.service.js';
-import userService from '../../service/user.service.js';
 import favoriteService from '../../service/favorite.service.js';
 import bookingService from '../../service/booking.service.js';
+import {
+  getStoredAuth,
+  setStoredAuth,
+  clearStoredAuth,
+  isValidAuthData,
+  handleAuthError,
+  loadUserDataSafely
+} from '../../utils/auth.utils.js';
 
 export const AuthContext = createContext(null);
 
@@ -16,22 +23,16 @@ export const AuthProvider = ({ children }) => {
   // On initial load, check for existing session
   useEffect(() => {
     const checkLoggedIn = () => {
-      const authData = localStorage.getItem('auth');
-      if (authData) {
-        try {
-          const userData = JSON.parse(authData);
-          if (userData.token) {
-            setUserProfile(userData);
-            setIsAuthenticated(true);
-            
-            // Load user data in background (non-blocking)
-            loadUserData().catch(console.error);
-          }
-        } catch (error) {
-          console.error('Invalid auth data:', error);
-          localStorage.removeItem('auth');
-        }
+      const authData = getStoredAuth();
+      
+      if (authData && isValidAuthData(authData)) {
+        setUserProfile(authData);
+        setIsAuthenticated(true);
+        
+        // Load user data in background (non-blocking)
+        loadUserData().catch(error => handleAuthError(error, 'initial load'));
       }
+      
       setLoading(false);
     };
 
@@ -40,36 +41,38 @@ export const AuthProvider = ({ children }) => {
 
   // Load user data from database
   const loadUserData = async () => {
-    try {
-      const [favs, bookings] = await Promise.all([
-        favoriteService.getMyFavorites().catch(() => []),
-        bookingService.getMyBookings().catch(() => [])
-      ]);
-      setFavorites(favs);
-      setBookingHistory(bookings);
-    } catch (error) {
-      console.error('Failed to load user data:', error);
-    }
+    const [favs, bookings] = await Promise.all([
+      loadUserDataSafely(() => favoriteService.getMyFavorites()),
+      loadUserDataSafely(() => bookingService.getMyBookings())
+    ]);
+    
+    setFavorites(favs);
+    setBookingHistory(bookings);
   };
 
   const login = async (email, password) => {
-    const userData = await authService.login(email, password);
-    setUserProfile(userData);
-    setIsAuthenticated(true);
-    
-    // Load user data in background (non-blocking)
-    loadUserData().catch(console.error);
-    
-    return userData;
+    try {
+      const userData = await authService.login(email, password);
+      setUserProfile(userData);
+      setIsAuthenticated(true);
+      setStoredAuth(userData);
+      
+      // Load user data in background (non-blocking)
+      loadUserData().catch(error => handleAuthError(error, 'login'));
+      
+      return userData;
+    } catch (error) {
+      throw handleAuthError(error, 'login');
+    }
   };
 
   const loginWithUserData = async (userData) => {
     setUserProfile(userData);
     setIsAuthenticated(true);
-    localStorage.setItem('auth', JSON.stringify(userData));
+    setStoredAuth(userData);
     
     // Load user data in background (non-blocking)
-    loadUserData().catch(console.error);
+    loadUserData().catch(error => handleAuthError(error, 'loginWithUserData'));
   };
 
   const logout = async () => {
@@ -77,12 +80,11 @@ export const AuthProvider = ({ children }) => {
       // Call logout API to invalidate token on server
       await authService.logout();
     } catch (error) {
-      console.error('Logout API call failed:', error);
+      handleAuthError(error, 'logout API');
     }
     
     // Clear local state and storage
-    localStorage.removeItem('auth');
-    localStorage.removeItem('user');
+    clearStoredAuth();
     setUserProfile(null);
     setIsAuthenticated(false);
     setFavorites([]);
@@ -113,7 +115,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = (updatedData) => {
     const newProfile = { ...userProfile, ...updatedData };
     setUserProfile(newProfile);
-    localStorage.setItem('auth', JSON.stringify(newProfile));
+    setStoredAuth(newProfile);
   };
 
   const value = {
