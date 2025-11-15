@@ -350,35 +350,63 @@ const HomePage = () => {
       </section>
 
       {/* CONTACT SECTION */}
-      <section ref={contactRef} id="contact" className={`contact-section animate-on-scroll ${isContactVisible ? 'is-visible' : ''}`}>
+      <section ref={contactRef} id="contact" className={`contact-section-new animate-on-scroll ${isContactVisible ? 'is-visible' : ''}`}>
         <div className="container">
-          <div className="contact-grid">
-            <div className="contact-info">
-              <h3>Have Questions? <span className="accent">Get in Touch!</span></h3>
-              <p className="muted">We're here to help with any questions about hostels, bookings, or our platform. Reach out and we'll get back to you shortly.</p>
-              <div className="info-item">
-                <i className="fa-solid fa-location-dot"></i>
-                <div>
-                  <strong>Our Office</strong>
-                  <p>Makerere University, Kampala, Uganda</p>
-                </div>
+          <div className="contact-header-new">
+            <h3>Ready to Find Your <span className="accent">Perfect Hostel?</span></h3>
+            <p className="muted">Get in touch with us for personalized assistance or any questions about our platform.</p>
+          </div>
+          <div className="contact-cards-grid">
+            <div className="contact-card">
+              <div className="contact-card-icon">
+                <i className="fa-solid fa-comments"></i>
               </div>
-              <div className="info-item">
+              <h4>Live Chat</h4>
+              <p>Get instant answers to your questions</p>
+              <button className="btn primary">Start Chat</button>
+            </div>
+            <div className="contact-card">
+              <div className="contact-card-icon">
+                <i className="fa-solid fa-phone"></i>
+              </div>
+              <h4>Call Us</h4>
+              <p>Speak directly with our support team</p>
+              <a href="tel:+256700000000" className="btn primary">+256 700 000 000</a>
+            </div>
+            <div className="contact-card">
+              <div className="contact-card-icon">
                 <i className="fa-solid fa-envelope"></i>
-                <div>
-                  <strong>Email Us</strong>
-                  <p>info@bookmyhostel.com</p>
+              </div>
+              <h4>Email Support</h4>
+              <p>Send us a detailed message</p>
+              <a href="mailto:info@bookmyhostel.com" className="btn primary">Send Email</a>
+            </div>
+          </div>
+          <div className="contact-form-card">
+            <div className="form-header">
+              <h4>Send us a Message</h4>
+              <p>Fill out the form below and we'll get back to you within 24 hours</p>
+            </div>
+            <form onSubmit={handleContactSubmit} className="modern-contact-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Full Name</label>
+                  <input type="text" name="name" placeholder="Enter your full name" required value={contactForm.name} onChange={handleContactChange} />
+                </div>
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <input type="email" name="email" placeholder="Enter your email" required value={contactForm.email} onChange={handleContactChange} />
                 </div>
               </div>
-            </div>
-            <div className="contact-form">
-              <form onSubmit={handleContactSubmit}>
-                <input type="text" name="name" placeholder="Your Name" required value={contactForm.name} onChange={handleContactChange} />
-                <input type="email" name="email" placeholder="Your Email" required value={contactForm.email} onChange={handleContactChange} />
-                <textarea name="message" placeholder="Your Message..." rows="5" required value={contactForm.message} onChange={handleContactChange}></textarea>
-                <button type="submit" className="btn primary full-width">Send Message</button>
-              </form>
-            </div>
+              <div className="form-group">
+                <label>Message</label>
+                <textarea name="message" placeholder="Tell us how we can help you..." rows="4" required value={contactForm.message} onChange={handleContactChange}></textarea>
+              </div>
+              <button type="submit" className="btn primary submit-btn">
+                <i className="fa-solid fa-paper-plane"></i>
+                Send Message
+              </button>
+            </form>
           </div>
         </div>
       </section>
