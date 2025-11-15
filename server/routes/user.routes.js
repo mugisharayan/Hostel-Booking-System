@@ -1,4 +1,3 @@
-import express from 'express';
 import {
   registerUser,
   loginUser,
@@ -8,23 +7,46 @@ import {
   debugUsers,
 } from '../controllers/user.controller.js';
 import { protect } from '../middleware/auth.middleware.js';
-import User from '../models/user.model.js';
+import {
+  createRouter,
+  createPublicRoute,
+  protectedRoutes,
+  routeDoc
+} from '../utils/route.helpers.js';
 
-const router = express.Router();
+const router = createRouter();
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-router.post('/logout', (req, res) => {
-  res.status(200).json({ message: 'Logged out successfully' });
+// Public routes
+createPublicRoute(router, 'post', '/register', registerUser);
+createPublicRoute(router, 'post', '/login', loginUser);
+createPublicRoute(router, 'post', '/logout', (req, res) => {
+  res.status(200).json({ 
+    success: true,
+    message: 'Logged out successfully' 
+  });
 });
 
-// Debug endpoint
-router.get('/debug', debugUsers);
+// Protected routes
 router
   .route('/profile')
-  .get(protect, getUserProfile)
-  .put(protect, updateUserProfile);
+  .get(...protectedRoutes(protect), getUserProfile)
+  .put(...protectedRoutes(protect), updateUserProfile);
 
-router.put('/change-password', protect, changePassword);
+router.put('/change-password', ...protectedRoutes(protect), changePassword);
+
+// Development/Debug routes (should be removed in production)
+if (process.env.NODE_ENV === 'development') {
+  router.get('/debug', debugUsers);
+}
+
+// Route documentation (for API docs)
+export const userRoutesDocs = [
+  routeDoc('Register a new user', 'POST', '/api/users/register'),
+  routeDoc('Login user', 'POST', '/api/users/login'),
+  routeDoc('Logout user', 'POST', '/api/users/logout'),
+  routeDoc('Get user profile', 'GET', '/api/users/profile', 'Private'),
+  routeDoc('Update user profile', 'PUT', '/api/users/profile', 'Private'),
+  routeDoc('Change password', 'PUT', '/api/users/change-password', 'Private'),
+];
 
 export default router;
