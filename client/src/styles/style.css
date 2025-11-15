@@ -29,15 +29,16 @@ body{
 .site-header{background:transparent;position:absolute;top:0;left:0;right:0;z-index:40; transition: background-color 0.3s ease;}
 .site-header.scrolled {
   position: fixed;
-  background-color: var(--bg-light);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: linear-gradient(135deg, #00d4ff 0%, #00bfff 50%, #0099cc 100%);
+  box-shadow: 0 4px 20px rgba(0, 191, 255, 0.4);
 }
 .site-header.scrolled .logo {
-  color: var(--primary-color);
-  text-shadow: none;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 .site-header.scrolled .main-nav a {
-  color: var(--text-dark);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
 .logo {
