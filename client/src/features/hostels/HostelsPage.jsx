@@ -1,6 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import HostelCard from './HostelCard';
 import { apiService } from '../../service/api.service';
+import { logger } from '../../utils/logger';
+import { handleError } from '../../utils/errorHandler';
 import '../../styles/hostel-card.css';
 import '../../styles/hostel-card-hover.css';
 import '../../styles/modern-hostels.css';
@@ -18,36 +20,31 @@ const HostelsPage = () => {
   });
   const [visibleHostelCount, setVisibleHostelCount] = useState(6);
 
-  // Load hostels from localStorage and API
+  // Load hostels from API with comprehensive error handling
+  const loadHostels = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      logger.info('Loading hostels from API');
+      
+      const response = await apiService.hostels.getAll();
+      const apiHostels = response.data.map(hostel => [hostel._id, hostel]);
+      setHostels(apiHostels);
+      logger.info('Hostels loaded successfully', { count: apiHostels.length });
+    } catch (err) {
+      const { message } = handleError(err, 'Failed to load hostels');
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
-    const loadHostels = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Load from localStorage first
-        const localHostels = JSON.parse(localStorage.getItem('hostels') || '[]');
-        const localHostelsFormatted = localHostels.map(hostel => [hostel.id, hostel]);
-        
-        // Try to load from API
-        try {
-          const response = await apiService.hostels.getAll();
-          const apiHostels = response.data.map(hostel => [hostel._id, hostel]);
-          setHostels([...localHostelsFormatted, ...apiHostels]);
-        } catch (apiError) {
-          // If API fails, use only localStorage hostels
-          console.warn('API failed, using localStorage hostels only:', apiError);
-          setHostels(localHostelsFormatted);
-        }
-      } catch (err) {
-        console.error('Failed to load hostels:', err);
-        setError('Failed to load hostels. Please check your connection and try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
     loadHostels();
   }, []);
+
+  // Add function to refresh hostels (can be called after hostel creation)
+  window.refreshHostels = loadHostels;
 
   // Animation on scroll logic
   useEffect(() => {
@@ -67,30 +64,43 @@ const HostelsPage = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleFilterChange = (e) => {
+  // Filter handlers with improved readability
+  const resetVisibleCount = useCallback(() => {
+    setVisibleHostelCount(6);
+  }, []);
+
+  const handleFilterChange = useCallback((e) => {
     const { id, value } = e.target;
     const filterKey = id === 'maxPriceInput' ? 'maxPrice' : id;
-    setFilters(prev => ({ ...prev, [filterKey]: parseInt(value) || value }));
-    setVisibleHostelCount(6); // Reset visible count on filter change
-  };
+    const parsedValue = id.includes('Price') ? parseInt(value) || value : value;
+    
+    setFilters(prev => ({ ...prev, [filterKey]: parsedValue }));
+    resetVisibleCount();
+    logger.debug('Filter changed', { filterKey, value: parsedValue });
+  }, [resetVisibleCount]);
 
-  const handleSearchChange = (e) => {
-    setFilters(prev => ({ ...prev, searchTerm: e.target.value }));
-    setVisibleHostelCount(6); // Reset visible count on filter change
-  };
+  const handleSearchChange = useCallback((e) => {
+    const searchTerm = e.target.value;
+    setFilters(prev => ({ ...prev, searchTerm }));
+    resetVisibleCount();
+    logger.debug('Search term changed', { searchTerm });
+  }, [resetVisibleCount]);
 
-  const handleAmenityToggle = (amenity) => {
+  const handleAmenityToggle = useCallback((amenity) => {
     setFilters(prev => {
-      const newAmenities = prev.amenities.includes(amenity)
+      const isCurrentlySelected = prev.amenities.includes(amenity);
+      const newAmenities = isCurrentlySelected
         ? prev.amenities.filter(a => a !== amenity)
         : [...prev.amenities, amenity];
+      
+      logger.debug('Amenity toggled', { amenity, selected: !isCurrentlySelected });
       return { ...prev, amenities: newAmenities };
     });
-    setVisibleHostelCount(6); // Reset visible count on filter change
-  };
+    resetVisibleCount();
+  }, [resetVisibleCount]);
 
-  // College to location mapping
-  const collegeLocationMap = {
+  // College to location mapping for filtering
+  const COLLEGE_LOCATION_MAP = useMemo(() => ({
     cocis: ['wandegeya', 'ldc'],
     cobams: ['kikumi kikumi', 'kikoni'],
     cedat: ['kikoni'],
@@ -101,7 +111,7 @@ const HostelsPage = () => {
     chs: ['mulago', 'wandegeya'],
     covab: ['kikoni'],
     sol: ['ldc']
-  };
+  }), []);
 
   // Extract unique amenities from all hostels
   const uniqueAmenities = useMemo(() => {
@@ -116,43 +126,66 @@ const HostelsPage = () => {
     return Array.from(amenitiesSet).sort();
   }, [hostels]);
 
+  // Helper functions for filtering logic
+  const getLowestPrice = useCallback((rooms) => {
+    if (!rooms?.length) return 0;
+    return rooms.reduce((min, room) => {
+      const price = room.price || 0;
+      return price < min ? price : min;
+    }, Infinity);
+  }, []);
+
+  const checkLocationMatch = useCallback((hostelLocation, filterLocation) => {
+    if (filterLocation === 'all') return true;
+    
+    const normalizedHostelLocation = hostelLocation.toLowerCase();
+    const normalizedFilterLocation = filterLocation.toLowerCase();
+    
+    return normalizedHostelLocation.replace(/ /g, '-') === normalizedFilterLocation ||
+           normalizedHostelLocation === normalizedFilterLocation.replace(/-/g, ' ');
+  }, []);
+
+  const checkCollegeMatch = useCallback((hostelLocation, filterCollege) => {
+    if (filterCollege === 'all') return true;
+    
+    const collegeLocations = COLLEGE_LOCATION_MAP[filterCollege] || [];
+    if (collegeLocations.length === 0) return true;
+    
+    return collegeLocations.some(location => 
+      checkLocationMatch(hostelLocation, location)
+    );
+  }, [COLLEGE_LOCATION_MAP, checkLocationMatch]);
+
+  const checkAmenitiesMatch = useCallback((hostelAmenities, filterAmenities) => {
+    return filterAmenities.every(filterAmenity =>
+      hostelAmenities?.some(hostelAmenity => 
+        hostelAmenity.name.toLowerCase() === filterAmenity.toLowerCase()
+      )
+    );
+  }, []);
+
   const filteredHostels = useMemo(() => {
     return hostels.filter(([, hostel]) => {
-      const lowestPrice = hostel.rooms && hostel.rooms.length > 0 
-        ? hostel.rooms.reduce((min, room) => (room.price && room.price < min ? room.price : min), Infinity)
-        : 0;
+      const lowestPrice = getLowestPrice(hostel.rooms);
       const nameMatch = hostel.name.toLowerCase().includes(filters.searchTerm.toLowerCase());
-      
-      const locationMatch = filters.location === 'all' || 
-        hostel.location.toLowerCase().replace(/ /g, '-') === filters.location.toLowerCase() ||
-        hostel.location.toLowerCase() === filters.location.toLowerCase().replace(/-/g, ' ');
-      
-      // College filter logic
-      const collegeMatch = filters.college === 'all' || (() => {
-        const collegeLocations = collegeLocationMap[filters.college] || [];
-        if (collegeLocations.length === 0) return true; // Show all if no locations specified
-        return collegeLocations.some(location => 
-          hostel.location.toLowerCase() === location.toLowerCase() ||
-          hostel.location.toLowerCase().replace(/ /g, '-') === location.toLowerCase().replace(/ /g, '-')
-        );
-      })();
-      
+      const locationMatch = checkLocationMatch(hostel.location, filters.location);
+      const collegeMatch = checkCollegeMatch(hostel.location, filters.college);
       const priceMatch = lowestPrice <= filters.maxPrice;
-      const amenitiesMatch = filters.amenities.every(filterAmenity =>
-        hostel.amenities && hostel.amenities.some(hostelAmenity => 
-          hostelAmenity.name.toLowerCase() === filterAmenity.toLowerCase()
-        )
-      );
-
+      const amenitiesMatch = checkAmenitiesMatch(hostel.amenities, filters.amenities);
+      
       return nameMatch && locationMatch && collegeMatch && priceMatch && amenitiesMatch;
     });
-  }, [hostels, filters]);
+  }, [hostels, filters, getLowestPrice, checkLocationMatch, checkCollegeMatch, checkAmenitiesMatch]);
 
   const hostelsToDisplay = filteredHostels.slice(0, visibleHostelCount);
 
-  const handleLoadMore = () => {
-    setVisibleHostelCount(prev => prev + 6);
-  };
+  const handleLoadMore = useCallback(() => {
+    setVisibleHostelCount(prev => {
+      const newCount = prev + 6;
+      logger.debug('Loading more hostels', { previousCount: prev, newCount });
+      return newCount;
+    });
+  }, []);
 
   return (
     <div className="modern-hostels-page">
@@ -349,6 +382,15 @@ const HostelsPage = () => {
                       </button>
                     </div>
                   )}
+                  <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <button 
+                      className="btn outline" 
+                      onClick={loadHostels}
+                      style={{ padding: '10px 20px' }}
+                    >
+                      <i className="fas fa-refresh"></i> Refresh Hostels
+                    </button>
+                  </div>
                 </>
               )}
               </section>
