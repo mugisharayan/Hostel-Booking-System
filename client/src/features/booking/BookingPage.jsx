@@ -7,6 +7,7 @@ import authService from '../../service/auth.service';
 import hostelService from '../../service/hostel.service';
 import receiptService from '../../service/receipt.service';
 import userService from '../../service/user.service';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import '../../styles/booking-page.css';
 
 const BookingPage = () => {
