@@ -12,6 +12,11 @@ const paymentSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    hostel: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Hostel',
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,
@@ -28,7 +33,7 @@ const paymentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Completed', 'Failed'],
+      enum: ['Pending', 'Completed', 'Failed', 'Approved', 'Rejected'],
       default: 'Pending',
     },
   },
