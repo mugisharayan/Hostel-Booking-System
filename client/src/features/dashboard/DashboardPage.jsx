@@ -18,6 +18,7 @@ import dashboardService from '../../service/dashboard.service';
 import receiptService from '../../service/receipt.service';
 import maintenanceService from '../../service/maintenance.service';
 import communicationService from '../../service/communication.service';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import '../../styles/student-communication.css';
 
 const DashboardPage = ({ onOpenReviewModal }) => {
@@ -67,11 +68,7 @@ const DashboardPage = ({ onOpenReviewModal }) => {
     return (
       <main className="dashboard-page">
         <div className="container">
-          <div className="dashboard-panel active" style={{ textAlign: 'center', padding: '50px' }}>
-            <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '48px', color: '#0ea5e9', marginBottom: '20px' }}></i>
-            <h2>Loading Dashboard...</h2>
-            <p className="muted">Please wait while we fetch your data.</p>
-          </div>
+          <LoadingSpinner size="large" text="Loading Dashboard..." />
         </div>
       </main>
     );
@@ -160,13 +157,10 @@ const DashboardPage = ({ onOpenReviewModal }) => {
           <p className="dashboard-hero-subtitle">Here's what's happening with your bookings today</p>
         </div>
         <div className="hero-actions">
+          <button className="icon-btn" onClick={() => navigate('/')} title="Back to Home" style={{background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', color: 'white', cursor: 'pointer', marginRight: '10px'}}>
+            <i className="fa-solid fa-arrow-left"></i>
+          </button>
           <NotificationBell onClick={() => setIsNotificationCenterOpen(true)} />
-          <button className="icon-btn" onClick={() => setIsMessageCenterOpen(true)} title="Message Custodian">
-            <i className="fas fa-comments"></i>
-          </button>
-          <button className="icon-btn emergency-btn" onClick={() => setIsEmergencyContactOpen(true)} title="Emergency Contact">
-            <i className="fas fa-exclamation-triangle"></i>
-          </button>
         </div>
       </section>
       

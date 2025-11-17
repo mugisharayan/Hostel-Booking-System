@@ -15,25 +15,30 @@ const MaintenancePage = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const loadMaintenanceRequests = async () => {
-      if (!userProfile) {
-        navigate('/');
-        return;
-      }
-      
-      try {
-        const requests = await maintenanceService.getMyMaintenanceRequests();
-        setMaintenanceRequests(requests);
-      } catch (error) {
-        setError('Failed to load maintenance requests');
-        console.error('Maintenance requests load error:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const loadMaintenanceRequests = async () => {
+    if (!userProfile) {
+      navigate('/');
+      return;
+    }
     
+    try {
+      const requests = await maintenanceService.getMyMaintenanceRequests();
+      setMaintenanceRequests(requests);
+    } catch (error) {
+      setError('Failed to load maintenance requests');
+      console.error('Maintenance requests load error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadMaintenanceRequests();
+    
+    // Poll for updates every 30 seconds
+    const interval = setInterval(loadMaintenanceRequests, 30000);
+    
+    return () => clearInterval(interval);
   }, [userProfile, navigate]);
 
   const handleFileChange = (e) => {
