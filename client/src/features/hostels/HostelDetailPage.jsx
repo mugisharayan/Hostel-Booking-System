@@ -264,12 +264,18 @@ const HostelDetailPage = ({ onOpenAuthModal }) => {
             <div className="amenities-content">
               <h3>What We Offer</h3>
               <div className="amenity-list">
-                {hostel.amenities && hostel.amenities.map((amenity, index) => (
-                  <div className="amenity-box" key={index}>
-                    <i className={`fa-solid ${amenity.icon}`}></i>
-                    <span>{amenity.name}</span>
-                  </div>
-                ))}
+                {hostel.amenities && hostel.amenities.map((amenity, index) => {
+                  // Handle both string and object amenities for backward compatibility
+                  const amenityName = typeof amenity === 'string' ? amenity : amenity.name;
+                  const amenityIcon = typeof amenity === 'string' ? 'fa-check' : (amenity.icon || 'fa-check');
+                  
+                  return (
+                    <div className="amenity-box" key={index}>
+                      <i className={`fa-solid ${amenityIcon}`}></i>
+                      <span>{amenityName}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             
@@ -282,9 +288,9 @@ const HostelDetailPage = ({ onOpenAuthModal }) => {
                   <div className="pricing-card" key={index}>
                     <i className={`fa-solid ${room.icon || 'fa-bed'} pricing-icon`}></i>
                     <h3>{room.name}</h3>
-                    <p>{room.description}</p>
+                    <p>{room.description || `Comfortable ${room.name.toLowerCase()} accommodation`}</p>
                     <div className="pricing-card-price">
-                      <strong>UGX {room.price.toLocaleString()}</strong>
+                      <strong>UGX {Number(room.price).toLocaleString()}</strong>
                       <span>/ semester</span>
                     </div>
                     <button className="btn primary full-width" onClick={() => handleBookNow(room)}>

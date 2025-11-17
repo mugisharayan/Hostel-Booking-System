@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { RoomDataProvider } from './src/contexts/RoomDataContext';
 import { CustodianProvider } from './src/contexts/CustodianContext';
@@ -9,6 +9,7 @@ import { MessageProvider } from './src/contexts/MessageContext';
 import Header from './src/components/layout/Header';
 import Footer from './src/components/layout/Footer';
 import BackToTop from './src/components/common/BackToTop';
+
 
 // Import modals and overlays
 import AuthModal from './src/features/auth/AuthModal';
@@ -23,6 +24,7 @@ import ProtectedRoute from './src/features/auth/ProtectedRoute';
 // Import feature pages
 import HomePage from './src/features/home/HomePage';
 import AboutPage from './src/features/about/AboutPage';
+import FAQPage from './src/features/faq/FAQPage';
 import HostelsPage from './src/features/hostels/HostelsPage';
 import HostelDetailPage from './src/features/hostels/HostelDetailPage';
 import BookingPage from './src/features/booking/BookingPage';
@@ -44,6 +46,8 @@ import HostelRegistrationPage from './src/features/hostels/HostelRegistrationPag
 
 function App() {
   const location = useLocation();
+  
+
   // State for modals (these would typically be managed by a context or Redux in a larger app)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authRedirectTo, setAuthRedirectTo] = useState(null);
@@ -75,6 +79,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/faq" element={<FAQPage />} />
           <Route path="/hostels" element={<HostelsPage />} />
           <Route path="/hostel/:hostelId" element={<HostelDetailPage onOpenAuthModal={() => {
             setAuthRedirectTo('booking');

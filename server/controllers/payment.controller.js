@@ -30,7 +30,7 @@ const createPaymentForBooking = asyncHandler(async (req, res) => {
     throw new Error('Invalid payment method');
   }
 
-  const booking = await Booking.findById(bookingId);
+  const booking = await Booking.findById(bookingId).populate('hostel');
 
   if (!booking) {
     res.status(404);
@@ -53,10 +53,11 @@ const createPaymentForBooking = asyncHandler(async (req, res) => {
   const payment = new Payment({
     booking: bookingId,
     student: req.user._id,
+    hostel: booking.hostel._id || booking.hostel,
     amount,
     paymentMethod,
     transactionId,
-    status: 'Completed',
+    status: 'Pending',
   });
 
   const createdPayment = await payment.save();
