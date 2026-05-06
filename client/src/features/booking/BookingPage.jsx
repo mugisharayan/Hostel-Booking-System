@@ -23,11 +23,6 @@ const BookingPage = () => {
     }
   }, [userProfile, navigate, searchParams]);
 
-  // Don't render anything if no user profile
-  if (!userProfile) {
-    return null;
-  }
-
   // Check for active bookings on page load
   React.useEffect(() => {
     const checkActiveBooking = async () => {
@@ -113,6 +108,11 @@ const BookingPage = () => {
   const serviceFee = 5000;
   const totalPrice = price + serviceFee;
   const MERCHANT_NUMBER = '0740099098';
+
+  // Keep hook order stable during logout/login transitions.
+  if (!userProfile) {
+    return null;
+  }
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
