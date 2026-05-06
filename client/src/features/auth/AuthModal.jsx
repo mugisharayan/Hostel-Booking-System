@@ -36,6 +36,8 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null }) => {
     return null;
   };
 
+  const isCustodianRole = (value) => String(value || '').toLowerCase() === 'custodian';
+
   // In a real app, you'd use a robust toast library.
   const showToast = (message, isError = false) => {
     console.log(`Toast: ${message} (Error: ${isError})`);
@@ -87,7 +89,7 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null }) => {
       
       // Use setTimeout to allow state to update before navigation
       setTimeout(() => {
-        if (response.data.role === 'Custodian') {
+        if (isCustodianRole(response.data.role)) {
           console.log('Navigating to custodian dashboard, role:', response.data.role);
           window.location.href = '/custodian-dashboard';
         } else {
@@ -133,7 +135,7 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null }) => {
       
       // Use setTimeout to allow state to update before navigation
       setTimeout(() => {
-        if (response.data.role === 'Custodian') {
+        if (isCustodianRole(response.data.role)) {
           console.log('Navigating to custodian dashboard, role:', response.data.role);
           window.location.href = '/custodian-dashboard';
         } else {

@@ -105,11 +105,11 @@ Recommended Render web service settings:
 
 - Service type: `Web Service`
 - Branch: `main`
-- Root directory: `server`
+- Root directory: repo root (leave it blank)
 - Build command:
 
 ```bash
-npm install && npm --prefix ../client install && npm --prefix ../client run build
+npm --prefix server install && npm --prefix client install && npm run build
 ```
 
 - Start command:
