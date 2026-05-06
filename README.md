@@ -79,7 +79,7 @@ npm start
 
 Notes:
 
-- the server serves the built frontend from `client/dist` when `NODE_ENV=production`
+- the server serves the built frontend from `client/dist` whenever that build output exists
 - if port `5000` is already taken on your machine, override it when starting the server, for example `PORT=5050 npm --prefix server start`
 
 ## Verification
@@ -105,11 +105,11 @@ Recommended Render web service settings:
 
 - Service type: `Web Service`
 - Branch: `main`
-- Root directory: repo root
+- Root directory: `server`
 - Build command:
 
 ```bash
-npm install && npm --prefix server install && npm --prefix client install && npm run build
+npm install && npm --prefix ../client install && npm --prefix ../client run build
 ```
 
 - Start command:
@@ -121,16 +121,9 @@ npm start
 - Required environment variables:
   - `MONGO_URI`
   - `JWT_SECRET`
-  - `NODE_ENV=production`
 
 `MONGODB_URI` also works if you are reusing an older environment setup, but new deployments should prefer `MONGO_URI`.
 
-## GitHub Actions
-
-`.github/workflows/render-deploy.yml` does three things on pushes to `main`:
-
-- installs client and server dependencies
-- builds the frontend and syntax-checks the backend entrypoint
-- triggers a Render deploy hook stored in the GitHub secret `RENDER_DEPLOY_HOOK_URL`
+Render auto-deploy from the connected GitHub repo is enough for this class project, so no extra GitHub Actions workflow is required.
 
 More detailed reproduction notes are written to `~/Desktop/deployment.md`.

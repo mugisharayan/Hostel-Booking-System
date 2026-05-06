@@ -74,7 +74,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api', notFound);
 
-if (process.env.NODE_ENV === 'production' && fs.existsSync(clientIndexPath)) {
+if (fs.existsSync(clientIndexPath)) {
   app.use(express.static(clientDistPath));
   app.get(/^(?!\/api).*/, (req, res) => {
     res.sendFile(clientIndexPath);
