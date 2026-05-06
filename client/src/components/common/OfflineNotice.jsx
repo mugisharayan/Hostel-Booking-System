@@ -6,7 +6,7 @@ const OfflineNotice = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        await fetch('http://localhost:5000/api/test', { method: 'HEAD' });
+        await fetch('/api/test', { method: 'HEAD' });
         setIsOffline(false);
       } catch {
         setIsOffline(true);

@@ -8,13 +8,13 @@ const ConnectionStatus = () => {
     const checkConnection = async () => {
       try {
         // Test server connection
-        const response = await fetch('http://localhost:5000/api/test');
+        const response = await fetch('/api/test');
         if (response.ok) {
           setStatus(prev => ({ ...prev, server: 'connected' }));
           
           // Test database connection
           try {
-            const healthResponse = await fetch('http://localhost:5000/api/health');
+            const healthResponse = await fetch('/api/health');
             const healthData = await healthResponse.json();
             setStatus(prev => ({ 
               ...prev, 

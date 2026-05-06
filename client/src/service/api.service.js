@@ -5,8 +5,7 @@ import { handleError } from '../utils/errorHandler';
 const trimTrailingSlash = (value) => value?.replace(/\/+$/, '');
 
 export const API_BASE_URL =
-  trimTrailingSlash(import.meta.env.VITE_API_URL) ||
-  (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
+  trimTrailingSlash(import.meta.env.VITE_API_URL) || '/api';
 
 const getAuthHeaders = () => {
   const headers = {
