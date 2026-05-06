@@ -41,16 +41,13 @@ jobs:
       - name: Verify server entrypoint
         run: npm run verify:server
 
-      - name: Require deploy hook secret
+      - name: Trigger Render deploy hook when configured
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
-            echo "Missing required secret: RENDER_DEPLOY_HOOK_URL"
-            exit 1
+            echo "RENDER_DEPLOY_HOOK_URL is not set. Skipping deploy hook trigger."
+            exit 0
           fi
 
-      - name: Trigger Render deploy
-        env:
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: curl --fail --silent --show-error --request POST "$RENDER_DEPLOY_HOOK_URL"
+          curl --fail --silent --show-error --request POST "$RENDER_DEPLOY_HOOK_URL"
