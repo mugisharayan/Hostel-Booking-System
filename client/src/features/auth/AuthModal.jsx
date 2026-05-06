@@ -27,6 +27,15 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null }) => {
     specialChar: false,
   });
 
+  const consumePostAuthRedirect = () => {
+    const storedRedirect = sessionStorage.getItem('postAuthRedirect');
+    if (storedRedirect) {
+      sessionStorage.removeItem('postAuthRedirect');
+      return storedRedirect;
+    }
+    return null;
+  };
+
   // In a real app, you'd use a robust toast library.
   const showToast = (message, isError = false) => {
     console.log(`Toast: ${message} (Error: ${isError})`);
@@ -82,8 +91,13 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null }) => {
           console.log('Navigating to custodian dashboard, role:', response.data.role);
           window.location.href = '/custodian-dashboard';
         } else {
+          const postAuthRedirect = consumePostAuthRedirect();
+
           // Handle different redirect scenarios for students
-          if (redirectTo === 'hostels') {
+          if (postAuthRedirect) {
+            console.log('Navigating to pending booking redirect');
+            navigate(postAuthRedirect);
+          } else if (redirectTo === 'hostels') {
             console.log('Navigating to hostels page');
             navigate('/hostels');
           } else if (redirectTo === 'booking') {
@@ -123,8 +137,21 @@ const AuthModal = ({ isOpen, onClose, redirectTo = null }) => {
           console.log('Navigating to custodian dashboard, role:', response.data.role);
           window.location.href = '/custodian-dashboard';
         } else {
-          console.log('Navigating to student dashboard');
-          navigate('/dashboard');
+          const postAuthRedirect = consumePostAuthRedirect();
+
+          if (postAuthRedirect) {
+            console.log('Navigating to pending booking redirect');
+            navigate(postAuthRedirect);
+          } else if (redirectTo === 'hostels') {
+            console.log('Navigating to hostels page');
+            navigate('/hostels');
+          } else if (redirectTo === 'booking') {
+            console.log('Navigating to booking page');
+            navigate('/booking');
+          } else {
+            console.log('Navigating to student dashboard');
+            navigate('/dashboard');
+          }
         }
       }, 200);
     } catch (error) {

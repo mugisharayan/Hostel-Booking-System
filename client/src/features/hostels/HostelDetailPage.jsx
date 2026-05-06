@@ -156,15 +156,18 @@ const HostelDetailPage = ({ onOpenAuthModal }) => {
   };
 
   const handleBookNow = (room) => {
+    const params = new URLSearchParams({
+      hostel: hostel.name,
+      room: room.name,
+      price: room.price,
+      image: hostel.images && hostel.images[0] ? hostel.images[0] : 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1',
+    });
+    const bookingPath = `/booking?${params.toString()}`;
+
     if (isAuthenticated) {
-      const params = new URLSearchParams({
-        hostel: hostel.name,
-        room: room.name,
-        price: room.price,
-        image: hostel.images && hostel.images[0] ? hostel.images[0] : 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=1',
-      });
-      navigate(`/booking?${params.toString()}`);
+      navigate(bookingPath);
     } else {
+      sessionStorage.setItem('postAuthRedirect', bookingPath);
       onOpenAuthModal();
     }
   };
