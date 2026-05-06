@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Component utility functions
 
 // Price formatting utilities
@@ -91,6 +93,17 @@ export const createAriaLabel = (action, item, condition) => {
   }
   
   return `${actionText} ${itemText}`;
+};
+
+export const formatDate = (value) => {
+  if (!value) return '';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return date.toLocaleString();
 };
 
 // Component state utilities

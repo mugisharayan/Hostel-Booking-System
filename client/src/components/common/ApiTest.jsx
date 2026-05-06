@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import bookingService from '../../service/booking.service';
 import paymentService from '../../service/payment.service';
 import authService from '../../service/auth.service';
+import { API_BASE_URL } from '../../service/api.service.js';
 
 const ApiTest = () => {
   const [testResults, setTestResults] = useState([]);
@@ -17,7 +18,7 @@ const ApiTest = () => {
 
     // Test API connectivity
     try {
-      const response = await fetch('http://localhost:5000/api/test');
+      const response = await fetch(`${API_BASE_URL}/test`);
       const data = await response.json();
       addResult('API Connectivity', true, data.message);
     } catch (error) {

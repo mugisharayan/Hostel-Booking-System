@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-// Handle connection events
 mongoose.connection.on('connected', () => {
   console.log('Mongoose connected to MongoDB');
 });
@@ -15,8 +14,14 @@ mongoose.connection.on('disconnected', () => {
 
 const connectDB = async () => {
   try {
+    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+
+    if (!mongoUri) {
+      throw new Error('MONGO_URI or MONGODB_URI must be set');
+    }
+
     mongoose.set('bufferCommands', false);
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+    const conn = await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
       maxPoolSize: 10
@@ -24,16 +29,7 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    // Use local fallback
-    try {
-      const localConn = await mongoose.connect('mongodb://localhost:27017/hostel-booking', {
-        serverSelectionTimeoutMS: 5000
-      });
-      console.log('Connected to local MongoDB');
-    } catch (localError) {
-      console.error('Local MongoDB also failed:', localError.message);
-      process.exit(1);
-    }
+    process.exit(1);
   }
 };
 

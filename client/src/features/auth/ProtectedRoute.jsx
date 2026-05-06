@@ -3,33 +3,26 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const { isAuthenticated, userProfile } = useContext(AuthContext);
+  const { isAuthenticated, userProfile, loading } = useContext(AuthContext);
+  const userRole = userProfile?.role;
+  const normalizedRole = typeof userRole === 'string' ? userRole.toLowerCase() : '';
+  const normalizedAllowedRoles = allowedRoles?.map((role) =>
+    typeof role === 'string' ? role.toLowerCase() : role
+  );
 
-  console.log('ProtectedRoute check:', { 
-    isAuthenticated, 
-    userRole: userProfile?.role, 
-    allowedRoles,
-    userProfile 
-  });
+  if (loading) {
+    return null;
+  }
 
   if (!isAuthenticated) {
-    console.log('Not authenticated, redirecting to home');
     return <Navigate to="/" replace />;
   }
 
-  const userRole = userProfile?.role;
-
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
-    console.log('Role not allowed:', {
-      userRole,
-      allowedRoles,
-      includes: allowedRoles.includes(userRole)
-    });
-    const redirectPath = userRole === 'Custodian' ? '/custodian-dashboard' : '/dashboard';
+  if (normalizedAllowedRoles && !normalizedAllowedRoles.includes(normalizedRole)) {
+    const redirectPath = normalizedRole === 'custodian' ? '/custodian-dashboard' : '/dashboard';
     return <Navigate to={redirectPath} replace />;
   }
 
-  console.log('Access granted to protected route');
   return <Outlet />;
 };
 

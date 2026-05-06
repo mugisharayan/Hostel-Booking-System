@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -15,57 +18,47 @@ import custodianRoutes from './routes/custodian.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import messageRoutes from './routes/message.routes.js';
 import healthRoutes from './routes/health.routes.js';
-import { globalErrorHandler } from './utils/errorHandler.js';
 import requestLogger from './middleware/requestLogger.js';
+import { errorHandler, notFound } from './middleware/error.middleware.js';
 import logger from './utils/logger.js';
 
-// Load environment variables
 dotenv.config();
-
-// Connect to MongoDB
 connectDB();
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDistPath = path.resolve(__dirname, '../client/dist');
+const clientIndexPath = path.join(clientDistPath, 'index.html');
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5174'
+].filter(Boolean);
+const isLocalOrigin = (origin) => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
 
-// Request logging middleware
+app.disable('x-powered-by');
 app.use(requestLogger);
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin) || isLocalOrigin(origin)) {
+        return callback(null, true);
+      }
 
-// Middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
-  credentials: true
-})); // Enable Cross-Origin Resource Sharing
-app.use(express.json({ limit: '50mb' })); // To parse JSON bodies with increased limit for images
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true
+  })
+);
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// A simple test route
-app.get('/', (req, res) => {
-  res.send('Hostel Booking System API is running...');
-});
-
-// Test endpoint for frontend connectivity
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API connection successful', timestamp: new Date().toISOString() });
-});
-
-// Debug endpoint to check bookings
-app.get('/api/debug/bookings', async (req, res) => {
-  try {
-    logger.info('Debug endpoint accessed: /api/debug/bookings');
-    const Booking = (await import('./models/booking.model.js')).default;
-    const allBookings = await Booking.find({}).populate('student', 'name email');
-    logger.info('Bookings retrieved successfully', { count: allBookings.length });
-    res.json({
-      total: allBookings.length,
-      bookings: allBookings
-    });
-  } catch (error) {
-    logger.error('Error in debug bookings endpoint:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// API Routes
+app.use('/api', healthRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/hostels', hostelRoutes);
 app.use('/api/bookings', bookingRoutes);
@@ -78,20 +71,32 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/custodian', custodianRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api', healthRoutes);
+app.use('/api', notFound);
 
-// Global error handler
-app.use(globalErrorHandler);
+if (process.env.NODE_ENV === 'production' && fs.existsSync(clientIndexPath)) {
+  app.use(express.static(clientDistPath));
+  app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(clientIndexPath);
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'Hostel Booking System API is running',
+      environment: process.env.NODE_ENV || 'development',
+      health: '/api/health',
+      test: '/api/test'
+    });
+  });
+}
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  logger.error('Unhandled Promise Rejection:', err);
-  process.exit(1);
+app.use(errorHandler);
+
+process.on('unhandledRejection', (error) => {
+  logger.error('Unhandled promise rejection', error);
 });
 
-// Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-  logger.error('Uncaught Exception:', err);
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught exception', error);
   process.exit(1);
 });
 
@@ -100,7 +105,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   logger.info(`Server is running on port ${PORT}`, {
     environment: process.env.NODE_ENV || 'development',
-    port: PORT,
-    timestamp: new Date().toISOString()
+    port: PORT
   });
 });

@@ -73,7 +73,7 @@ export const useAuthModal = (redirectTo) => {
 
     setTimeout(() => {
       const redirectPath = getRedirectPath(userData.role, redirectTo);
-      if (userData.role === 'Custodian') {
+      if (userData.role?.toLowerCase() === 'custodian') {
         window.location.href = redirectPath;
       } else {
         navigate(redirectPath);

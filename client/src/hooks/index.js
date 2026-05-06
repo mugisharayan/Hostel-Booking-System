@@ -35,7 +35,8 @@ export { useAuthModal } from './useAuthModal';
 export { useIntersectionObserver } from './useIntersectionObserver';
 export { useLazyLoading } from './useLazyLoading';
 export { useDataRefresh } from './useDataRefresh';
-export { useRealTimeUpdate } from './useRealTimeUpdate';
+export { default as useRealTimeUpdate } from './useRealTimeUpdate';
+export { default as useRealTimeUpdates } from './useRealTimeUpdates';
 export { useWebSocket } from './useWebSocket';
 
 // Re-export commonly used React hooks with custom utilities

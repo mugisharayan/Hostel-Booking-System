@@ -1,13 +1,18 @@
 {
   "name": "hostel-booking-system",
   "version": "1.0.0",
-  "main": "app.js",
+  "private": true,
+  "description": "Makerere hostel booking system with a Vite client and Express API",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js",
+    "start": "npm --prefix server start",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm --prefix client run build",
+    "verify:server": "node --check server/server.js",
     "test": "jest --env=node --detectOpenHandles"
   },
   "repository": {
@@ -21,8 +26,8 @@
     "url": "https://github.com/mugisharayan/Hostel-Booking-System/issues"
   },
   "homepage": "https://github.com/mugisharayan/Hostel-Booking-System#readme",
-  "description": "",
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "jest": "^30.2.0",
     "supertest": "^7.1.4"
   }

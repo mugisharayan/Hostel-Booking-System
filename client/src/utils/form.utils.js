@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Form utility functions
 
 // Password validation utilities
@@ -38,7 +40,7 @@ export const validateRequired = (value) => {
 export const createFormState = (initialValues = {}) => {
   const [values, setValues] = React.useState(initialValues);
   const [errors, setErrors] = React.useState({});
-  const [touched, setTouched] = React.useState({});
+  const [touched, setTouchedState] = React.useState({});
 
   const setValue = React.useCallback((name, value) => {
     setValues(prev => ({ ...prev, [name]: value }));
@@ -49,13 +51,13 @@ export const createFormState = (initialValues = {}) => {
   }, []);
 
   const setTouched = React.useCallback((name, isTouched = true) => {
-    setTouched(prev => ({ ...prev, [name]: isTouched }));
+    setTouchedState(prev => ({ ...prev, [name]: isTouched }));
   }, []);
 
   const resetForm = React.useCallback(() => {
     setValues(initialValues);
     setErrors({});
-    setTouched({});
+    setTouchedState({});
   }, [initialValues]);
 
   return {
@@ -71,7 +73,7 @@ export const createFormState = (initialValues = {}) => {
 
 // Navigation utilities
 export const getRedirectPath = (userRole, redirectTo) => {
-  if (userRole === 'Custodian') {
+  if (userRole?.toLowerCase() === 'custodian') {
     return '/custodian-dashboard';
   }
 

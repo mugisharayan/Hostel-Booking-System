@@ -1,6 +1,12 @@
 import axios from 'axios';
+import { logger } from '../utils/logger';
+import { handleError } from '../utils/errorHandler';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const trimTrailingSlash = (value) => value?.replace(/\/+$/, '');
+
+export const API_BASE_URL =
+  trimTrailingSlash(import.meta.env.VITE_API_URL) ||
+  (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
 
 // Configure axios defaults
 axios.defaults.withCredentials = true;
@@ -10,23 +16,47 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.interceptors.request.use((config) => {
   const auth = localStorage.getItem('auth');
   if (auth) {
-    const userData = JSON.parse(auth);
-    if (userData.token) {
-      config.headers.Authorization = `Bearer ${userData.token}`;
+    try {
+      const userData = JSON.parse(auth);
+      if (userData.token && userData.token !== 'undefined' && userData.token !== 'null') {
+        config.headers.Authorization = `Bearer ${userData.token}`;
+      }
+    } catch (error) {
+      logger.error('Invalid auth data in localStorage', error);
+      localStorage.removeItem('auth');
     }
   }
   return config;
 });
 
 // Response interceptor for error handling
+let isRedirecting = false;
 axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('auth');
-      window.location.href = '/';
+  (response) => {
+    // Handle new API response format
+    if (response.data?.status === 'success') {
+      return {
+        ...response,
+        data: response.data.data || response.data
+      };
     }
-    return Promise.reject(error);
+    return response;
+  },
+  (error) => {
+    const { message } = handleError(error, 'API request failed');
+    
+    if (error.response?.status === 401 && !isRedirecting) {
+      isRedirecting = true;
+      logger.warn('401 Unauthorized - clearing auth and redirecting');
+      localStorage.removeItem('auth');
+      window.location.replace('/');
+    }
+    
+    // Return a more user-friendly error
+    return Promise.reject({
+      ...error,
+      message: message
+    });
   }
 );
 
@@ -169,13 +199,61 @@ const apiService = {
       axios.delete(`${API_BASE_URL}/rooms/${id}`)
   },
 
+  // Notification endpoints
+  notifications: {
+    getAll: () => 
+      axios.get(`${API_BASE_URL}/notifications`),
+    
+    markAsRead: (notificationId) => 
+      axios.put(`${API_BASE_URL}/notifications/${notificationId}/read`),
+    
+    getUnreadCount: () => 
+      axios.get(`${API_BASE_URL}/notifications/unread-count`)
+  },
+
+  // Message endpoints
+  messages: {
+    getAll: () => 
+      axios.get(`${API_BASE_URL}/messages`),
+    
+    send: (hostelId, content) => 
+      axios.post(`${API_BASE_URL}/messages`, { hostelId, content }),
+    
+    markAsRead: () => 
+      axios.put(`${API_BASE_URL}/messages/mark-read`)
+  },
+
   // Custodian endpoints
   custodian: {
-    linkHostel: (hostelName) => 
-      axios.post(`${API_BASE_URL}/custodian/link-hostel`, { hostelName }),
+    createHostel: (hostelData) => 
+      axios.post(`${API_BASE_URL}/custodian/create-hostel`, hostelData),
+    
+    getMyHostel: () => 
+      axios.get(`${API_BASE_URL}/custodian/my-hostel`),
+    
+    updateHostel: (hostelData) => 
+      axios.put(`${API_BASE_URL}/custodian/update-hostel`, hostelData),
     
     getDashboardData: () => 
       axios.get(`${API_BASE_URL}/custodian/dashboard-data`),
+    
+    getBookings: () => 
+      axios.get(`${API_BASE_URL}/custodian/bookings`),
+    
+    getPayments: () => 
+      axios.get(`${API_BASE_URL}/custodian/payments`),
+    
+    getRooms: () => 
+      axios.get(`${API_BASE_URL}/custodian/rooms`),
+    
+    createRoom: (roomData) => 
+      axios.post(`${API_BASE_URL}/custodian/rooms`, roomData),
+    
+    updateRoom: (roomId, roomData) => 
+      axios.put(`${API_BASE_URL}/custodian/rooms/${roomId}`, roomData),
+    
+    deleteRoom: (roomId) => 
+      axios.delete(`${API_BASE_URL}/custodian/rooms/${roomId}`),
     
     getProfile: () => 
       axios.get(`${API_BASE_URL}/custodian/profile`),
@@ -186,8 +264,6 @@ const apiService = {
     changePassword: (passwordData) => 
       axios.put(`${API_BASE_URL}/custodian/change-password`, passwordData),
     
-
-    
     getPendingPayments: () => 
       axios.get(`${API_BASE_URL}/custodian/payments/pending`),
     
@@ -195,7 +271,37 @@ const apiService = {
       axios.put(`${API_BASE_URL}/custodian/payments/${paymentId}/approve`),
     
     rejectPayment: (paymentId) => 
-      axios.put(`${API_BASE_URL}/custodian/payments/${paymentId}/reject`)
+      axios.put(`${API_BASE_URL}/custodian/payments/${paymentId}/reject`),
+    
+    seedRooms: () => 
+      axios.post(`${API_BASE_URL}/custodian/seed-rooms`),
+    
+    getPendingAssignments: () => 
+      axios.get(`${API_BASE_URL}/custodian/pending-assignments`),
+    
+    assignRoom: (paymentId, roomId) => 
+      axios.put(`${API_BASE_URL}/custodian/assign-room/${paymentId}`, { roomId }),
+    
+    getAssignmentHistory: () => 
+      axios.get(`${API_BASE_URL}/custodian/assignment-history`),
+    
+    getMaintenanceRequests: () => 
+      axios.get(`${API_BASE_URL}/custodian/maintenance-requests`),
+    
+    updateMaintenanceStatus: (requestId, status) => 
+      axios.put(`${API_BASE_URL}/custodian/maintenance-requests/${requestId}`, { status }),
+    
+    getMessages: () => 
+      axios.get(`${API_BASE_URL}/custodian/messages`),
+    
+    sendMessage: (recipientId, content) => 
+      axios.post(`${API_BASE_URL}/custodian/messages`, { recipientId, content }),
+    
+    markMessagesRead: () => 
+      axios.put(`${API_BASE_URL}/custodian/messages/mark-read`),
+    
+    getNotifications: () => 
+      axios.get(`${API_BASE_URL}/custodian/notifications`)
   }
 };
 

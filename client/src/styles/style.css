@@ -1,3 +1,5 @@
+@import url('./mobile-fixes.css');
+
 /* ===== CSS VARIABLES ===== */
 :root {
   /* Colors */
@@ -12,9 +14,6 @@
   --card-shadow-hover-blue: 0 10px 30px rgba(0, 191, 255, 0.3);
   --border-radius: 12px;
 }
-
-/* ===== IMPORTS ===== */
-@import url('./mobile-fixes.css');
 
 /* ===== RESET & BASE STYLES ===== */
 * {
