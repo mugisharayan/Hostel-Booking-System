@@ -8,6 +8,56 @@ export const API_BASE_URL =
   trimTrailingSlash(import.meta.env.VITE_API_URL) ||
   (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
 
+const getAuthHeaders = () => {
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+
+  const auth = localStorage.getItem('auth');
+  if (!auth) {
+    return headers;
+  }
+
+  try {
+    const userData = JSON.parse(auth);
+    if (userData.token && userData.token !== 'undefined' && userData.token !== 'null') {
+      headers.Authorization = `Bearer ${userData.token}`;
+    }
+  } catch (error) {
+    logger.error('Invalid auth data in localStorage', error);
+    localStorage.removeItem('auth');
+  }
+
+  return headers;
+};
+
+const fetchJson = async (url, options = {}) => {
+  const response = await fetch(url, {
+    credentials: 'include',
+    ...options,
+    headers: {
+      ...getAuthHeaders(),
+      ...(options.headers || {})
+    }
+  });
+
+  const contentType = response.headers.get('content-type') || '';
+  const payload = contentType.includes('application/json')
+    ? await response.json()
+    : await response.text();
+
+  if (!response.ok) {
+    const error = new Error(payload?.message || `Request failed with status ${response.status}`);
+    error.response = {
+      status: response.status,
+      data: payload
+    };
+    throw error;
+  }
+
+  return payload?.status === 'success' ? (payload.data || payload) : payload;
+};
+
 // Configure axios defaults
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -88,10 +138,10 @@ const apiService = {
   // Hostel endpoints
   hostels: {
     getAll: () => 
-      axios.get(`${API_BASE_URL}/hostels`),
+      fetchJson(`${API_BASE_URL}/hostels`).then((data) => ({ data })),
     
     getById: (id) => 
-      axios.get(`${API_BASE_URL}/hostels/${id}`),
+      fetchJson(`${API_BASE_URL}/hostels/${id}`).then((data) => ({ data })),
     
     create: (hostelData) => 
       axios.post(`${API_BASE_URL}/hostels`, hostelData),
