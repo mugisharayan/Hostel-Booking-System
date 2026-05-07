@@ -109,7 +109,7 @@ Recommended Render web service settings:
 - Build command:
 
 ```bash
-npm --prefix server install && npm --prefix client install && npm run build
+npm install && npm --prefix server install && npm --prefix client install && npm run verify:server && npm test && npm run build
 ```
 
 - Start command:
@@ -124,6 +124,6 @@ npm start
 
 `MONGODB_URI` also works if you are reusing an older environment setup, but new deployments should prefer `MONGO_URI`.
 
-Render auto-deploy from the connected GitHub repo is enough for this class project, so no extra GitHub Actions workflow is required.
+Render auto-deploy from the connected repo is enough for this class project. The lightweight CI part now happens inside the Render build command: syntax check, `npm test`, then frontend build.
 
 More detailed reproduction notes are written to `~/Desktop/deployment.md`.
