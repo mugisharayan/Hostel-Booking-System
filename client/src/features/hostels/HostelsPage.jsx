@@ -239,7 +239,7 @@ const HostelsPage = () => {
         </div>
         <div className="hero-content">
           <h1 className="hero-title">
-            Find Your <span className="accent-text">Perfect Hostel</span>
+            Find Your <span className="accent-text">Perfect Hostels</span>
           </h1>
           <p className="hero-subtitle">
             Discover amazing student accommodations near Makerere University
