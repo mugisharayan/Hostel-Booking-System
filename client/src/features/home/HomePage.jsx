@@ -150,7 +150,7 @@ const HomePage = () => {
         <div className="container hero-grid">
           <div className="hero-left">
             <p className="eyebrow">SECURE & CONVENIENT</p>
-            <h1><span className="light">Find Your</span> <span className="bold">Perfect Hostel</span> <br />Near <span className="accent">Makerere</span></h1>
+            <h1><span className="light">Find Your</span> <span className="bold">Perfect Hostels</span> <br />Near <span className="accent">Makerere</span></h1>
             <p className="lead">Discover, compare, and book the best student hostels around Makerere University. Your home away from home is just a few clicks away.</p>
             <div className="hero-ctas">
               <Link to="/hostels" className="btn primary">Search Hostels</Link>
