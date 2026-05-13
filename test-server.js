@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 app.post('/api/users/register', (req, res) => {
   console.log('Registration request received:', req.body);
   res.json({ 
-    message: 'Test registration endpoint',
+    message: 'Tests registration endpoint',
     data: req.body 
   });
 });
